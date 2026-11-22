@@ -1,1092 +1,938 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="SUST Cover Maker - Professional Assignment Cover Page Generator for Shahjalal University of Science and Technology students" />
-  <title>SUST Cover Maker | Assignment Cover Page Generator</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <style>
-    :root {
-      --primary: #0d5c3d;
-      --primary-dark: #08432c;
-      --primary-light: #1a7a52;
-      --accent: #c9a227;
-      --bg: #f4f7f5;
-      --card: #ffffff;
-      --text: #1a2e25;
-      --text-muted: #5a6d64;
-      --border: #d4e0d9;
-      --shadow: 0 4px 20px rgba(13, 92, 61, 0.08);
-      --shadow-lg: 0 10px 40px rgba(13, 92, 61, 0.12);
-      --radius: 12px;
-      --radius-sm: 8px;
-      --transition: 0.25s ease;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    /* Header */
-    .header {
-      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%);
-      color: white;
-      padding: 1.25rem 1.5rem;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.15);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .header-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .header-logo {
-      width: 56px;
-      height: 56px;
-      object-fit: contain;
-      background: white;
-      border-radius: 50%;
-      padding: 4px;
-      flex-shrink: 0;
-    }
-
-    .header-text h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-
-    .header-text p {
-      font-size: 0.8rem;
-      opacity: 0.9;
-      margin-top: 2px;
-    }
-
-    /* Hero */
-    .hero {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem 1.5rem;
-      text-align: center;
-    }
-
-    .hero h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.75rem;
-      color: var(--primary-dark);
-      margin-bottom: 0.5rem;
-    }
-
-    .hero p {
-      color: var(--text-muted);
-      max-width: 640px;
-      margin: 0 auto;
-      font-size: 0.95rem;
-    }
-
-    /* Main Layout */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1.5rem 3rem;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
-
-    @media (min-width: 1024px) {
-      .container {
-        grid-template-columns: 1fr 1fr;
-        align-items: start;
-      }
-    }
-
-    /* Cards */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      overflow: hidden;
-      transition: box-shadow var(--transition);
-    }
-
-    .card:hover { box-shadow: var(--shadow-lg); }
-
-    .card-header {
-      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
-      color: white;
-      padding: 0.9rem 1.25rem;
-      font-weight: 600;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .card-body { padding: 1.25rem; }
-
-    /* Form */
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-
-    @media (min-width: 480px) {
-      .form-grid { grid-template-columns: 1fr 1fr; }
-      .form-grid .full { grid-column: 1 / -1; }
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-
-    .form-group label {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .form-group label .optional {
-      font-weight: 400;
-      color: var(--text-muted);
-      font-size: 0.75rem;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      padding: 0.6rem 0.85rem;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      font-size: 0.9rem;
-      font-family: inherit;
-      color: var(--text);
-      background: #fafcfb;
-      transition: border-color var(--transition), box-shadow var(--transition);
-    }
-
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(13, 92, 61, 0.15);
-      background: white;
-    }
-
-    .form-group input.error,
-    .form-group select.error {
-      border-color: #c0392b;
-    }
-
-    .error-msg {
-      font-size: 0.75rem;
-      color: #c0392b;
-      display: none;
-    }
-
-    .form-group.has-error .error-msg { display: block; }
-
-    /* Sections spacing */
-    .form-section { margin-bottom: 1.5rem; }
-    .form-section:last-child { margin-bottom: 0; }
-
-    /* Buttons */
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 1.5rem;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.4rem;
-      border: none;
-      border-radius: var(--radius-sm);
-      font-size: 0.95rem;
-      font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
-      transition: all var(--transition);
-      text-decoration: none;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      color: white;
-      box-shadow: 0 4px 14px rgba(13, 92, 61, 0.3);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(13, 92, 61, 0.4);
-    }
-
-    .btn-primary:active { transform: translateY(0); }
-
-    .btn-secondary {
-      background: white;
-      color: var(--primary);
-      border: 2px solid var(--primary);
-    }
-
-    .btn-secondary:hover {
-      background: var(--primary);
-      color: white;
-    }
-
-    .btn-danger {
-      background: #fff5f5;
-      color: #c0392b;
-      border: 1.5px solid #e8b4b4;
-    }
-
-    .btn-danger:hover {
-      background: #c0392b;
-      color: white;
-    }
-
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
-    /* Preview Panel */
-    .preview-panel {
-      position: sticky;
-      top: 90px;
-    }
-
-    .preview-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-    }
-
-    .preview-wrapper {
-      background: #e8eee9;
-      border-radius: var(--radius);
-      padding: 1.25rem;
-      box-shadow: var(--shadow);
-      overflow: auto;
-      max-height: calc(100vh - 140px);
-    }
-
-    /* Cover Page - A4 aspect ratio simulation */
-    #coverPage {
-      width: 100%;
-      max-width: 420px;
-      margin: 0 auto;
-      background: white;
-      aspect-ratio: 210 / 297;
-      padding: 28px 32px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-      display: flex;
-      flex-direction: column;
-      font-family: 'Times New Roman', Times, serif;
-      color: #111;
-      position: relative;
-      overflow: hidden;
-    }
-
-    @media (min-width: 480px) {
-      #coverPage {
-        max-width: 460px;
-        padding: 32px 36px;
-      }
-    }
-
-    .cover-logo {
-      width: 70px;
-      height: 70px;
-      object-fit: contain;
-      margin: 0 auto 8px;
-      display: block;
-    }
-
-    .cover-uni-name {
-      text-align: center;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      line-height: 1.35;
-      margin-bottom: 2px;
-      text-transform: uppercase;
-    }
-
-    .cover-uni-loc {
-      text-align: center;
-      font-size: 11px;
-      margin-bottom: 14px;
-      color: #333;
-    }
-
-    .cover-divider {
-      border: none;
-      border-top: 1.5px solid #0d5c3d;
-      margin: 0 0 12px;
-    }
-
-    .cover-title {
-      text-align: center;
-      font-size: 15px;
-      font-weight: 700;
-      margin: 6px 0 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .cover-assignment-title {
-      text-align: center;
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 4px;
-      line-height: 1.4;
-      min-height: 1.4em;
-    }
-
-    .cover-meta {
-      text-align: center;
-      font-size: 11.5px;
-      margin-bottom: 2px;
-      line-height: 1.45;
-    }
-
-    .cover-section {
-      margin-top: 14px;
-    }
-
-    .cover-section-title {
-      font-size: 12px;
-      font-weight: 700;
-      text-decoration: underline;
-      margin-bottom: 6px;
-      text-align: center;
-    }
-
-    .cover-info-table {
-      width: 100%;
-      font-size: 11.5px;
-      border-collapse: collapse;
-    }
-
-    .cover-info-table td {
-      padding: 2px 0;
-      vertical-align: top;
-    }
-
-    .cover-info-table .label {
-      width: 38%;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    .cover-info-table .colon {
-      width: 12px;
-      text-align: center;
-    }
-
-    .cover-submitted {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      margin-top: 18px;
-      font-size: 11.5px;
-    }
-
-    .cover-submitted > div {
-      flex: 1;
-    }
-
-    .cover-submitted h4 {
-      font-size: 12px;
-      font-weight: 700;
-      text-decoration: underline;
-      margin-bottom: 6px;
-    }
-
-    .cover-submitted p {
-      margin-bottom: 2px;
-      line-height: 1.4;
-    }
-
-    .cover-footer-note {
-      margin-top: auto;
-      padding-top: 12px;
-      text-align: center;
-      font-size: 10px;
-      color: #555;
-      border-top: 1px solid #ddd;
-    }
-
-    /* Toast */
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: var(--primary-dark);
-      color: white;
-      padding: 0.85rem 1.5rem;
-      border-radius: 50px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-      z-index: 1000;
-      opacity: 0;
-      transition: all 0.35s ease;
-      pointer-events: none;
-    }
-
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-
-    /* Footer */
-    .footer {
-      background: var(--primary-dark);
-      color: rgba(255,255,255,0.9);
-      padding: 2rem 1.5rem;
-      text-align: center;
-      margin-top: 2rem;
-    }
-
-    .footer h3 {
-      font-size: 0.95rem;
-      font-weight: 600;
-      margin-bottom: 0.6rem;
-      color: white;
-    }
-
-    .footer p {
-      font-size: 0.85rem;
-      margin-bottom: 0.25rem;
-      opacity: 0.9;
-    }
-
-    .footer a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .footer a:hover { text-decoration: underline; }
-
-    .footer-divider {
-      width: 60px;
-      height: 2px;
-      background: var(--accent);
-      margin: 1rem auto;
-      opacity: 0.6;
-    }
-
-    /* Loading spinner */
-    .spinner {
-      width: 18px;
-      height: 18px;
-      border: 2.5px solid rgba(255,255,255,0.3);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      display: none;
-    }
-
-    .btn.loading .spinner { display: inline-block; }
-    .btn.loading .btn-text { display: none; }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* Instructions */
-    .instructions {
-      background: #eef6f1;
-      border: 1px solid #c5ddd0;
-      border-radius: var(--radius-sm);
-      padding: 0.9rem 1.1rem;
-      margin-bottom: 1.25rem;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    .instructions strong { color: var(--primary-dark); }
-
-    /* Print styles */
-    @media print {
-      body * { visibility: hidden; }
-      #coverPage, #coverPage * { visibility: visible; }
-      #coverPage {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 210mm;
-        height: 297mm;
-        max-width: none;
-        aspect-ratio: auto;
-        box-shadow: none;
-        padding: 20mm 18mm;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SUST Cover Maker — Assignment Cover Page Generator</title>
+<meta name="description" content="Create a formal assignment cover page for Shahjalal University of Science and Technology (SUST) and download it as a PDF.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --firoza:#16B8A6;
+  --teal:#087F73;
+  --green:#173F35;
+  --white:#FFFFFF;
+  --bg:#F4F8F7;
+  --text:#263238;
+  --border:#DCE8E5;
+  --muted:#5b6b68;
+  --danger:#b3261e;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;overflow-x:hidden}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--teal)}
+
+/* ---------- Header ---------- */
+.site-header{background:var(--green);color:#fff;border-bottom:3px solid var(--firoza)}
+.header-inner{max-width:1400px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px}
+.hdr-logo-wrap{width:52px;height:52px;border-radius:50%;background:#fff;display:none;align-items:center;justify-content:center;flex:none;padding:5px}
+.hdr-logo-wrap.on{display:flex}
+.hdr-logo-wrap img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.hdr-title h1{margin:0;font-size:20px;font-weight:700;letter-spacing:.2px;line-height:1.2}
+.hdr-title .sub{font-size:12.5px;color:#bfe9e3;margin-top:2px}
+.hdr-uni{margin-left:auto;text-align:right;font-size:12.5px;line-height:1.35;color:#d9f1ed}
+.hdr-uni b{display:block;font-weight:600;color:#fff;font-size:13px}
+
+/* ---------- Layout ---------- */
+.layout{max-width:1400px;margin:0 auto;padding:20px;display:grid;grid-template-columns:minmax(340px,440px) minmax(0,1fr);gap:24px;align-items:start}
+.panel-form{min-width:0}
+.panel-preview{min-width:0;position:sticky;top:12px}
+
+.card{background:#fff;border:1px solid var(--border);border-radius:6px;padding:16px 18px;margin-bottom:14px;box-shadow:0 1px 2px rgba(23,63,53,.05)}
+.card h2{margin:0 0 12px;font-size:12.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--teal);font-weight:700;display:flex;align-items:center;gap:8px}
+.card h2::before{content:"";width:3px;height:14px;background:var(--firoza);display:block}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 12px}
+.field{display:flex;flex-direction:column;min-width:0}
+.field.span2{grid-column:1/-1}
+.field label{font-size:12.5px;font-weight:600;color:var(--green);margin-bottom:4px;display:flex;justify-content:space-between;gap:6px}
+.field label .req{color:var(--danger)}
+.field label .opt{font-weight:500;color:var(--muted);font-size:11.5px}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--border);border-radius:4px;padding:9px 10px;background:#fff;font-size:14px;transition:border-color .15s, box-shadow .15s}
+.field textarea{resize:vertical;min-height:74px}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--firoza);box-shadow:0 0 0 3px rgba(22,184,166,.18)}
+.field.invalid input,.field.invalid select,.field.invalid textarea{border-color:var(--danger);box-shadow:0 0 0 3px rgba(179,38,30,.1)}
+.field .err{display:none;color:var(--danger);font-size:11.5px;margin-top:3px}
+.field.invalid .err{display:block}
+.hint{font-size:12px;color:var(--muted);margin:8px 0 0}
+
+.btn{appearance:none;border:1px solid transparent;border-radius:4px;padding:10px 16px;font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:background .15s,border-color .15s,transform .05s}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--teal);color:#fff}
+.btn-primary:hover{background:#066b61}
+.btn-secondary{background:#fff;color:var(--teal);border-color:var(--teal)}
+.btn-secondary:hover{background:#eefaf8}
+.btn-ghost{background:transparent;color:var(--muted);border-color:var(--border)}
+.btn-ghost:hover{background:#fff;border-color:#c5d6d2;color:var(--text)}
+.btn-sm{padding:6px 12px;font-size:12.5px}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.actions .full{grid-column:1/-1}
+
+details.help{background:#fff;border:1px solid var(--border);border-radius:6px;margin-bottom:14px}
+details.help summary{cursor:pointer;padding:12px 18px;font-weight:600;color:var(--teal);font-size:13px;list-style:none}
+details.help summary::-webkit-details-marker{display:none}
+details.help summary::before{content:"+ ";font-weight:700}
+details.help[open] summary::before{content:"– "}
+details.help ol{margin:0;padding:0 18px 14px 36px;color:var(--muted);font-size:13px}
+details.help li{margin-bottom:3px}
+
+.logo-row{display:flex;align-items:center;gap:12px}
+.logo-thumb{width:48px;height:48px;border:1px dashed #b9cfca;border-radius:4px;display:flex;align-items:center;justify-content:center;background:var(--bg);flex:none;overflow:hidden;font-size:10px;color:var(--muted);text-align:center}
+.logo-thumb img{max-width:100%;max-height:100%;object-fit:contain}
+.logo-info{flex:1;min-width:0;font-size:12.5px;color:var(--muted);line-height:1.4}
+.logo-info b{color:var(--green);display:block;font-size:13px}
+.logo-btns{display:flex;gap:6px;flex-wrap:wrap}
+
+/* ---------- Preview panel ---------- */
+.preview-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:5px;overflow:hidden;background:#fff}
+.seg button{appearance:none;border:0;background:#fff;padding:8px 14px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-right:1px solid var(--border)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--teal);color:#fff}
+.seg.small button{padding:6px 11px;font-size:12px}
+.stage{background:#e7efed;border:1px solid var(--border);border-radius:6px;padding:18px;overflow:auto;max-height:calc(100vh - 150px)}
+.scaler{margin:0 auto;position:relative}
+.mount{transform-origin:top left;width:793px;height:1122px;box-shadow:0 4px 18px rgba(23,63,53,.18)}
+.preview-note{font-size:12px;color:var(--muted);margin:8px 2px 0}
+
+/* ---------- Footer ---------- */
+.site-footer{background:var(--green);color:#cfe9e5;margin-top:10px;border-top:3px solid var(--firoza)}
+.footer-inner{max-width:1400px;margin:0 auto;padding:22px 20px;text-align:center;font-size:13px;line-height:1.6}
+.footer-inner .lbl{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--firoza);font-weight:700;margin-bottom:4px}
+.footer-inner .nm{color:#fff;font-weight:700;font-size:15px}
+.footer-inner a{color:#8ff0e3;text-decoration:none;border-bottom:1px solid rgba(143,240,227,.4)}
+.footer-inner a:hover{color:#fff}
+
+/* ---------- Toast / loader / dialog ---------- */
+.toast-wrap{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:300;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:calc(100% - 32px);max-width:420px}
+.toast{background:var(--green);color:#fff;padding:11px 16px;border-radius:5px;font-size:13.5px;box-shadow:0 6px 20px rgba(0,0,0,.2);border-left:4px solid var(--firoza);opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:auto;width:100%}
+.toast.show{opacity:1;transform:none}
+.toast.error{border-left-color:#ff8a80;background:#5a1a16}
+.loader{position:fixed;inset:0;background:rgba(23,63,53,.55);z-index:400;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:#fff;font-weight:600}
+.loader.on{display:flex}
+.spin{width:38px;height:38px;border:4px solid rgba(255,255,255,.3);border-top-color:var(--firoza);border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+dialog{border:1px solid var(--border);border-radius:8px;padding:0;max-width:380px;width:calc(100% - 32px);box-shadow:0 12px 40px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(23,63,53,.5)}
+dialog .dlg{padding:20px}
+dialog h3{margin:0 0 6px;color:var(--green);font-size:16px}
+dialog p{margin:0 0 16px;color:var(--muted);font-size:13.5px}
+dialog .dlg-actions{display:flex;gap:10px;justify-content:flex-end}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover{background:#951b14}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1000px){
+  .layout{grid-template-columns:1fr;padding:14px}
+  .panel-preview{position:static}
+  .stage{max-height:none;padding:10px}
+  .hdr-uni{display:none}
+}
+@media (max-width:480px){
+  .grid{grid-template-columns:1fr}
+  .actions{grid-template-columns:1fr}
+  .header-inner{padding:10px 14px}
+  .hdr-title h1{font-size:17px}
+}
+
+/* ================= COVER PAGE (A4 = 793 x 1122 px) ================= */
+.cv{position:relative;width:793px;height:1122px;background:#fff;overflow:hidden;color:#263238;font-family:Inter,system-ui,Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact;word-wrap:break-word;overflow-wrap:anywhere}
+.cv *{box-sizing:border-box}
+.cv .inner{position:absolute;inset:0;display:flex;flex-direction:column}
+.cv .ph{color:#9db0ac;font-style:italic;font-weight:400}
+.cv .c-logo{display:block;object-fit:contain}
+.cv .c-logo-ph{border:1.5px dashed #b9cfca;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#9db0ac;font-size:11px;letter-spacing:1px;text-align:center;line-height:1.3}
+.cv ul.members{margin:4px 0 0;padding:0;list-style:none;column-gap:28px}
+.cv ul.members li{break-inside:avoid;padding:1px 0}
+
+/* ---- Template A: Classic Academic ---- */
+.cvA .frame{position:absolute;inset:24px;border:1.5px solid #16B8A6}
+.cvA .frame2{position:absolute;inset:31px;border:.6px solid rgba(22,184,166,.5)}
+.cvA .cn{position:absolute;width:30px;height:30px;border:0 solid #087F73}
+.cvA .cn.tl{top:20px;left:20px;border-top-width:3px;border-left-width:3px}
+.cvA .cn.tr{top:20px;right:20px;border-top-width:3px;border-right-width:3px}
+.cvA .cn.bl{bottom:20px;left:20px;border-bottom-width:3px;border-left-width:3px}
+.cvA .cn.br{bottom:20px;right:20px;border-bottom-width:3px;border-right-width:3px}
+.cvA .inner{padding:58px 70px 52px}
+.cvA .head{text-align:center}
+.cvA .head .c-logo{margin:0 auto;height:112px;max-width:150px}
+.cvA .head .c-logo-ph{width:104px;height:104px;margin:0 auto}
+.cvA .uni{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;font-size:28px;line-height:1.15;letter-spacing:.6px;text-transform:uppercase;color:#087F73;margin-top:14px}
+.cvA .loc{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#5b6b68;margin-top:5px}
+.cvA .dept{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;font-size:21px;color:#173F35;margin-top:14px;line-height:1.2}
+.cvA .deg{font-size:13px;color:#263238;margin-top:3px}
+.cvA .dv{display:flex;align-items:center;gap:10px;margin:20px auto 0;width:70%}
+.cvA .dv span{flex:1;height:1px;background:#DCE8E5}
+.cvA .dv i{width:7px;height:7px;background:#16B8A6;transform:rotate(45deg);display:block}
+.cvA .main{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:14px 0}
+.cvA .kicker{font-weight:700;font-size:12.5px;letter-spacing:6px;text-transform:uppercase;color:#087F73}
+.cvA .atitle{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;color:#173F35;line-height:1.18;margin-top:14px;max-width:560px}
+.cvA .atitle:after{content:"";display:block;width:56px;height:2px;background:#16B8A6;margin:16px auto 0}
+.cvA .course{margin-top:18px;font-size:14px;line-height:1.5}
+.cvA .course .cl{display:block;font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:#5b6b68;margin-top:8px}
+.cvA .course .cv-val{font-size:16px;font-weight:600;color:#263238}
+.cvA .info{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.cvA .box{border:1px solid #DCE8E5;padding:14px 16px 12px;min-width:0}
+.cvA .box h4{margin:0 0 10px;padding-bottom:7px;font-size:11.5px;letter-spacing:2.6px;text-transform:uppercase;color:#087F73;font-weight:700;border-bottom:1px solid #DCE8E5;position:relative}
+.cvA .box h4:after{content:"";position:absolute;left:0;bottom:-1.5px;width:38px;height:2px;background:#16B8A6}
+.cvA .row{display:grid;grid-template-columns:76px 1fr;gap:6px;padding:3px 0;font-size:12.5px;line-height:1.4}
+.cvA .row .l{color:#5b6b68}
+.cvA .row .v{font-weight:600;color:#263238}
+.cvA .bottom{margin-top:22px;padding-top:13px;border-top:1px solid #DCE8E5;text-align:center;font-size:12.5px}
+.cvA .bottom .dt b{color:#087F73}
+.cvA .bottom .grp{margin-top:7px;font-size:12px;color:#263238}
+.cvA .bottom .grp ul.members{display:inline-block;text-align:left}
+.cvA .bottom .rem{margin-top:6px;font-size:12px;font-style:italic;color:#5b6b68}
+.cvA .foot{margin-top:10px;font-size:9.5px;letter-spacing:2.6px;text-transform:uppercase;color:#8fa39f}
+
+/* ---- Template B: Modern Minimal ---- */
+.cvB .top{position:absolute;top:0;left:0;right:0;height:14px;background:#087F73}
+.cvB .top:after{content:"";position:absolute;left:0;top:0;width:160px;height:14px;background:#16B8A6}
+.cvB .c1{position:absolute;top:46px;right:46px;width:50px;height:50px;border-top:2.5px solid #16B8A6;border-right:2.5px solid #16B8A6}
+.cvB .c1:after{content:"";position:absolute;top:8px;right:8px;width:26px;height:26px;border-top:1px solid #16B8A6;border-right:1px solid #16B8A6;opacity:.5}
+.cvB .c2{position:absolute;bottom:46px;left:46px;width:50px;height:50px;border-bottom:2.5px solid #16B8A6;border-left:2.5px solid #16B8A6}
+.cvB .c2:after{content:"";position:absolute;bottom:8px;left:8px;width:26px;height:26px;border-bottom:1px solid #16B8A6;border-left:1px solid #16B8A6;opacity:.5}
+.cvB .inner{padding:62px 72px 56px}
+.cvB .head{display:flex;align-items:center;gap:20px;padding-right:50px}
+.cvB .head .c-logo{height:94px;max-width:120px;flex:none}
+.cvB .head .c-logo-ph{width:90px;height:90px;flex:none}
+.cvB .uni{font-weight:800;font-size:19px;line-height:1.25;letter-spacing:.7px;text-transform:uppercase;color:#087F73}
+.cvB .loc{font-size:12px;color:#5b6b68;margin-top:3px;letter-spacing:.4px}
+.cvB .dept{font-size:14.5px;font-weight:600;color:#173F35;margin-top:9px;line-height:1.3}
+.cvB .deg{font-size:12.5px;color:#5b6b68;margin-top:1px}
+.cvB .rule{height:1px;background:#DCE8E5;margin:22px 0 0;position:relative}
+.cvB .rule:after{content:"";position:absolute;left:0;top:-1px;width:70px;height:3px;background:#16B8A6}
+.cvB .main{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;padding:14px 0}
+.cvB .kicker{display:inline-block;align-self:flex-start;border:1px solid #16B8A6;color:#087F73;padding:4px 12px;font-size:11.5px;font-weight:700;letter-spacing:3.2px;text-transform:uppercase}
+.cvB .atitle{font-weight:700;color:#173F35;line-height:1.22;margin-top:16px;letter-spacing:-.2px}
+.cvB .course{margin-top:20px;border-left:3px solid #16B8A6;padding-left:14px;display:grid;grid-template-columns:1fr auto;gap:4px 28px;align-items:end}
+.cvB .course .cl{display:block;font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:#5b6b68;margin-bottom:1px}
+.cvB .course .cv-val{font-size:15px;font-weight:600;color:#263238}
+.cvB .sec{background:#F4F8F7;border-left:3px solid #16B8A6;padding:13px 18px 12px;margin-bottom:12px}
+.cvB .sec h4{margin:0 0 8px;font-size:11px;letter-spacing:2.6px;text-transform:uppercase;color:#087F73;font-weight:700}
+.cvB .sec .g{display:grid;grid-template-columns:1fr 1fr;gap:7px 26px}
+.cvB .sec .it{min-width:0}
+.cvB .sec .it .l{display:block;font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;color:#6b7c78}
+.cvB .sec .it .v{display:block;font-size:13.5px;font-weight:600;color:#263238;line-height:1.35}
+.cvB .bottom{margin-top:8px;padding-top:12px;border-top:1px solid #DCE8E5;display:flex;justify-content:space-between;gap:24px;font-size:12.5px}
+.cvB .bottom .dt{flex:none}
+.cvB .bottom .dt .l{display:block;font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;color:#6b7c78}
+.cvB .bottom .dt .v{font-weight:700;color:#087F73;font-size:13.5px}
+.cvB .bottom .grp{text-align:right;font-size:12px;min-width:0}
+.cvB .bottom .grp ul.members{display:inline-block;text-align:right}
+.cvB .bottom .rem{font-style:italic;color:#5b6b68;margin-top:3px}
+
+/* ---------- Print ---------- */
+#printArea{display:none}
+@page{size:A4;margin:0}
+@media print{
+  html,body{margin:0!important;padding:0!important;background:#fff!important;width:210mm;height:297mm;overflow:hidden}
+  body>*:not(#printArea){display:none!important}
+  #printArea{display:block!important}
+  #printArea .cv{box-shadow:none;margin:0;page-break-after:avoid;break-after:avoid}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <div class="header-inner">
-      <img src="https://upload.wikimedia.org/wikipedia/bn/e/e0/%E0%A6%B6%E0%A6%BE%E0%A6%B9%E0%A6%9C%E0%A6%BE%E0%A6%B2%E0%A6%BE%E0%A6%B2_%E0%A6%AC%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%A8_%E0%A6%93_%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%AF%E0%A7%81%E0%A6%95%E0%A7%8D%E0%A6%A4%E0%A6%BF_%E0%A6%AC%E0%A6%BF%E0%A6%B6%E0%A7%8D%E0%A6%AC%E0%A6%AC%E0%A6%BF%E0%A6%A6%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%B2%E0%A6%AF%E0%A6%BC%E0%A7%87%E0%A6%B0_%E0%A6%B2%E0%A7%8B%E0%A6%97%E0%A7%8B.png" alt="SUST Logo" class="header-logo" id="headerLogo" />
-      <div class="header-text">
-        <h1>SUST Cover Maker</h1>
-        <p>Shahjalal University of Science and Technology · Sylhet</p>
-      </div>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="hdr-logo-wrap" id="hdrLogoWrap"><img id="hdrLogo" alt="SUST logo"></div>
+    <div class="hdr-title">
+      <h1>SUST Cover Maker</h1>
+      <div class="sub">Assignment Cover Page Generator</div>
     </div>
-  </header>
-
-  <!-- Hero -->
-  <section class="hero">
-    <h2>Assignment Cover Page Generator</h2>
-    <p>Create professional, university-standard assignment cover pages in seconds. Fill in your details and download a high-quality A4 PDF instantly.</p>
-  </section>
-
-  <!-- Main Content -->
-  <div class="container">
-    <!-- Left: Forms -->
-    <div class="forms-column">
-      <div class="instructions">
-        <strong>How to use:</strong> Fill in the required fields (marked with *). Optional fields can be left blank. The live preview updates automatically. When ready, click <strong>Download Cover Page (PDF)</strong>.
-      </div>
-
-      <!-- Student Information -->
-      <div class="card form-section">
-        <div class="card-header">👤 Student Information</div>
-        <div class="card-body">
-          <div class="form-grid">
-            <div class="form-group full">
-              <label for="studentName">Student Name <span style="color:#c0392b">*</span></label>
-              <input type="text" id="studentName" placeholder="e.g. Md. Salek Miah" required />
-              <span class="error-msg">Student name is required</span>
-            </div>
-            <div class="form-group">
-              <label for="studentId">Student ID / Registration No. <span style="color:#c0392b">*</span></label>
-              <input type="text" id="studentId" placeholder="e.g. 2019331001" required />
-              <span class="error-msg">Student ID is required</span>
-            </div>
-            <div class="form-group">
-              <label for="department">Department <span style="color:#c0392b">*</span></label>
-              <input type="text" id="department" placeholder="e.g. Statistics" required />
-              <span class="error-msg">Department is required</span>
-            </div>
-            <div class="form-group full">
-              <label for="degree">Degree / Program <span style="color:#c0392b">*</span></label>
-              <input type="text" id="degree" placeholder="e.g. B.Sc. (Honours) in Statistics" required />
-              <span class="error-msg">Degree/Program is required</span>
-            </div>
-            <div class="form-group">
-              <label for="academicYear">Academic Year <span style="color:#c0392b">*</span></label>
-              <input type="text" id="academicYear" placeholder="e.g. 2024-2025" required />
-              <span class="error-msg">Academic year is required</span>
-            </div>
-            <div class="form-group">
-              <label for="term">Term / Semester <span style="color:#c0392b">*</span></label>
-              <input type="text" id="term" placeholder="e.g. 1st Semester" required />
-              <span class="error-msg">Term/Semester is required</span>
-            </div>
-            <div class="form-group">
-              <label for="session">Session <span style="color:#c0392b">*</span></label>
-              <input type="text" id="session" placeholder="e.g. 2019-20" required />
-              <span class="error-msg">Session is required</span>
-            </div>
-            <div class="form-group">
-              <label for="batch">Batch <span class="optional">(optional)</span></label>
-              <input type="text" id="batch" placeholder="e.g. 2019" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Assignment Information -->
-      <div class="card form-section">
-        <div class="card-header">📄 Assignment Information</div>
-        <div class="card-body">
-          <div class="form-grid">
-            <div class="form-group full">
-              <label for="assignmentTitle">Assignment Title <span style="color:#c0392b">*</span></label>
-              <input type="text" id="assignmentTitle" placeholder="e.g. Statistical Analysis of Climate Data" required />
-              <span class="error-msg">Assignment title is required</span>
-            </div>
-            <div class="form-group">
-              <label for="assignmentNo">Assignment Number <span class="optional">(optional)</span></label>
-              <input type="text" id="assignmentNo" placeholder="e.g. 01" />
-            </div>
-            <div class="form-group">
-              <label for="courseCode">Course Code <span style="color:#c0392b">*</span></label>
-              <input type="text" id="courseCode" placeholder="e.g. STA 321" required />
-              <span class="error-msg">Course code is required</span>
-            </div>
-            <div class="form-group full">
-              <label for="courseTitle">Course Title <span style="color:#c0392b">*</span></label>
-              <input type="text" id="courseTitle" placeholder="e.g. Multivariate Analysis" required />
-              <span class="error-msg">Course title is required</span>
-            </div>
-            <div class="form-group">
-              <label for="submissionDate">Submission Date <span style="color:#c0392b">*</span></label>
-              <input type="date" id="submissionDate" required />
-              <span class="error-msg">Submission date is required</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Course Teacher Information -->
-      <div class="card form-section">
-        <div class="card-header">👨‍🏫 Course Teacher Information</div>
-        <div class="card-body">
-          <div class="form-grid">
-            <div class="form-group full">
-              <label for="teacherName">Teacher's Name <span style="color:#c0392b">*</span></label>
-              <input type="text" id="teacherName" placeholder="e.g. Dr. Mohammad Ali" required />
-              <span class="error-msg">Teacher's name is required</span>
-            </div>
-            <div class="form-group">
-              <label for="designation">Designation <span style="color:#c0392b">*</span></label>
-              <input type="text" id="designation" placeholder="e.g. Associate Professor" required />
-              <span class="error-msg">Designation is required</span>
-            </div>
-            <div class="form-group">
-              <label for="teacherDept">Department <span style="color:#c0392b">*</span></label>
-              <input type="text" id="teacherDept" placeholder="e.g. Statistics" required />
-              <span class="error-msg">Teacher's department is required</span>
-            </div>
-            <div class="form-group full">
-              <label for="faculty">Faculty / School <span class="optional">(optional)</span></label>
-              <input type="text" id="faculty" placeholder="e.g. School of Physical Sciences" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Additional Information -->
-      <div class="card form-section">
-        <div class="card-header">➕ Additional Information</div>
-        <div class="card-body">
-          <div class="form-grid">
-            <div class="form-group full">
-              <label for="groupMembers">Group Members <span class="optional">(optional)</span></label>
-              <textarea id="groupMembers" rows="2" placeholder="e.g. Md. Salek Miah, Fatema Begum, ..."></textarea>
-            </div>
-            <div class="form-group">
-              <label for="groupNo">Group Number <span class="optional">(optional)</span></label>
-              <input type="text" id="groupNo" placeholder="e.g. Group-A" />
-            </div>
-            <div class="form-group">
-              <label for="remarks">Remarks <span class="optional">(optional)</span></label>
-              <input type="text" id="remarks" placeholder="Any additional note" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="btn-row">
-        <button type="button" class="btn btn-danger" id="resetBtn">↺ Reset All Fields</button>
-        <button type="button" class="btn btn-secondary" id="scrollPreviewBtn">👁 View Preview</button>
-      </div>
-    </div>
-
-    <!-- Right: Live Preview -->
-    <div class="preview-panel">
-      <div class="preview-actions">
-        <button type="button" class="btn btn-primary" id="downloadBtn">
-          <span class="spinner"></span>
-          <span class="btn-text">📥 Download Cover Page (PDF)</span>
-        </button>
-        <button type="button" class="btn btn-secondary" id="printBtn">🖨 Print Cover Page</button>
-      </div>
-
-      <div class="preview-wrapper">
-        <div id="coverPage">
-          <img src="https://upload.wikimedia.org/wikipedia/bn/e/e0/%E0%A6%B6%E0%A6%BE%E0%A6%B9%E0%A6%9C%E0%A6%BE%E0%A6%B2%E0%A6%BE%E0%A6%B2_%E0%A6%AC%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%A8_%E0%A6%93_%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%AF%E0%A7%81%E0%A6%95%E0%A7%8D%E0%A6%A4%E0%A6%BF_%E0%A6%AC%E0%A6%BF%E0%A6%B6%E0%A7%8D%E0%A6%AC%E0%A6%AC%E0%A6%BF%E0%A6%A6%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%B2%E0%A6%AF%E0%A6%BC%E0%A7%87%E0%A6%B0_%E0%A6%B2%E0%A7%8B%E0%A6%97%E0%A7%8B.png" alt="SUST Logo" class="cover-logo" id="coverLogo" crossorigin="anonymous" />
-          <div class="cover-uni-name">Shahjalal University of Science and Technology</div>
-          <div class="cover-uni-loc">Sylhet-3114, Bangladesh</div>
-          <hr class="cover-divider" />
-
-          <div class="cover-title">Assignment Cover Page</div>
-          <div class="cover-assignment-title" id="pvAssignmentTitle">[Assignment Title]</div>
-          <div class="cover-meta" id="pvAssignmentNo" style="display:none;"></div>
-          <div class="cover-meta" id="pvCourseInfo">Course: [Course Code] — [Course Title]</div>
-          <div class="cover-meta" id="pvSubmissionDate">Submission Date: [Date]</div>
-
-          <div class="cover-section">
-            <div class="cover-section-title">Student Information</div>
-            <table class="cover-info-table">
-              <tr><td class="label">Name</td><td class="colon">:</td><td id="pvStudentName">—</td></tr>
-              <tr><td class="label">ID / Reg. No.</td><td class="colon">:</td><td id="pvStudentId">—</td></tr>
-              <tr><td class="label">Department</td><td class="colon">:</td><td id="pvDepartment">—</td></tr>
-              <tr><td class="label">Degree / Program</td><td class="colon">:</td><td id="pvDegree">—</td></tr>
-              <tr><td class="label">Academic Year</td><td class="colon">:</td><td id="pvAcademicYear">—</td></tr>
-              <tr><td class="label">Term / Semester</td><td class="colon">:</td><td id="pvTerm">—</td></tr>
-              <tr><td class="label">Session</td><td class="colon">:</td><td id="pvSession">—</td></tr>
-              <tr id="pvBatchRow" style="display:none;"><td class="label">Batch</td><td class="colon">:</td><td id="pvBatch">—</td></tr>
-            </table>
-          </div>
-
-          <div class="cover-submitted">
-            <div>
-              <h4>Submitted To</h4>
-              <p id="pvTeacherName">—</p>
-              <p id="pvDesignation">—</p>
-              <p id="pvTeacherDept">—</p>
-              <p id="pvFaculty" style="display:none;"></p>
-            </div>
-            <div>
-              <h4>Submitted By</h4>
-              <p id="pvByName">—</p>
-              <p id="pvById">—</p>
-              <p id="pvByDept">—</p>
-              <p id="pvGroupNo" style="display:none;"></p>
-            </div>
-          </div>
-
-          <div id="pvGroupMembersSection" style="display:none; margin-top:12px; font-size:11.5px;">
-            <strong>Group Members:</strong>
-            <p id="pvGroupMembers" style="margin-top:2px;"></p>
-          </div>
-
-          <div id="pvRemarksSection" style="display:none; margin-top:8px; font-size:11.5px;">
-            <strong>Remarks:</strong> <span id="pvRemarks"></span>
-          </div>
-
-          <div class="cover-footer-note">
-            Shahjalal University of Science and Technology · Sylhet, Bangladesh
-          </div>
-        </div>
-      </div>
+    <div class="hdr-uni">
+      <b>Shahjalal University of Science and Technology</b>
+      Sylhet, Bangladesh
     </div>
   </div>
+</header>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <h3>Developed & Maintained By</h3>
-    <p><strong>Md Salek Miah</strong></p>
-    <p>B.Sc. (Honours) in Statistics</p>
-    <p>Shahjalal University of Science and Technology (SUST)</p>
-    <p>Sylhet, Bangladesh</p>
-    <div class="footer-divider"></div>
-    <p>Email: <a href="mailto:saleksta@gmail.com">saleksta@gmail.com</a></p>
-    <p style="margin-top:1rem; font-size:0.75rem; opacity:0.7;">© 2024–2026 SUST Cover Maker · Free tool for SUST students</p>
-  </footer>
+<main class="layout">
+  <section class="panel-form" aria-label="Cover page details">
+    <details class="help">
+      <summary>How to use</summary>
+      <ol>
+        <li>Fill in the fields below. Fields marked * are required.</li>
+        <li>Pick a template and watch the A4 preview update live.</li>
+        <li>Press <b>Download PDF</b> or <b>Print</b> when you are done.</li>
+        <li>Optional fields you leave empty are hidden from the cover.</li>
+      </ol>
+    </details>
 
-  <!-- Toast -->
-  <div class="toast" id="toast"></div>
+    <form id="coverForm" autocomplete="off" novalidate>
+      <div id="formMount"></div>
 
-  <script>
-    // ========== DOM Elements ==========
-    const fields = {
-      studentName: document.getElementById('studentName'),
-      studentId: document.getElementById('studentId'),
-      department: document.getElementById('department'),
-      degree: document.getElementById('degree'),
-      academicYear: document.getElementById('academicYear'),
-      term: document.getElementById('term'),
-      session: document.getElementById('session'),
-      batch: document.getElementById('batch'),
-      assignmentTitle: document.getElementById('assignmentTitle'),
-      assignmentNo: document.getElementById('assignmentNo'),
-      courseCode: document.getElementById('courseCode'),
-      courseTitle: document.getElementById('courseTitle'),
-      submissionDate: document.getElementById('submissionDate'),
-      teacherName: document.getElementById('teacherName'),
-      designation: document.getElementById('designation'),
-      teacherDept: document.getElementById('teacherDept'),
-      faculty: document.getElementById('faculty'),
-      groupMembers: document.getElementById('groupMembers'),
-      groupNo: document.getElementById('groupNo'),
-      remarks: document.getElementById('remarks')
+      <div class="card">
+        <h2>University Logo</h2>
+        <div class="logo-row">
+          <div class="logo-thumb" id="logoThumb">No logo</div>
+          <div class="logo-info">
+            <b id="logoStatus">Logo not loaded</b>
+            <span id="logoHelp">Put <code>sust-logo.png</code> next to this page, or upload the official logo once (it is remembered in this browser).</span>
+          </div>
+        </div>
+        <div class="logo-btns" style="margin-top:10px">
+          <button type="button" class="btn btn-secondary btn-sm" id="logoUploadBtn">Upload logo</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="logoClearBtn" hidden>Remove uploaded logo</button>
+          <input type="file" id="logoFile" accept="image/png,image/jpeg,image/svg+xml,image/webp" hidden>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="actions">
+          <button type="button" class="btn btn-primary" id="btnDownload">Download Cover Page (PDF)</button>
+          <button type="button" class="btn btn-secondary" id="btnPrint">Print Cover Page</button>
+          <button type="button" class="btn btn-ghost full" id="btnReset">Reset All Fields</button>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel-preview" aria-label="Live preview">
+    <div class="preview-bar">
+      <div class="seg" role="group" aria-label="Template">
+        <button type="button" data-tpl="A" aria-pressed="true">Classic Academic</button>
+        <button type="button" data-tpl="B" aria-pressed="false">Modern Minimal</button>
+      </div>
+      <div class="seg small" role="group" aria-label="Zoom">
+        <button type="button" data-zoom="fit" aria-pressed="true">Fit</button>
+        <button type="button" data-zoom="100" aria-pressed="false">100%</button>
+      </div>
+    </div>
+    <div class="stage" id="stage">
+      <div class="scaler" id="scaler"><div class="mount" id="mount"></div></div>
+    </div>
+    <p class="preview-note">A4 portrait preview. The downloaded PDF matches this layout.</p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="lbl">Developed &amp; Maintained By</div>
+    <div class="nm">Md Salek Miah</div>
+    <div>B.Sc. (Honours) in Statistics</div>
+    <div>Shahjalal University of Science and Technology (SUST)</div>
+    <div>Sylhet, Bangladesh.</div>
+    <div>Email: <a href="mailto:saleksta@gmail.com">saleksta@gmail.com</a></div>
+  </div>
+</footer>
+
+<div id="printArea" aria-hidden="true"></div>
+<div class="toast-wrap" id="toasts" aria-live="polite"></div>
+<div class="loader" id="loader" role="status"><div class="spin"></div><div>Generating PDF…</div></div>
+
+<dialog id="resetDlg">
+  <div class="dlg">
+    <h3>Reset all fields?</h3>
+    <p>Everything you entered will be replaced with the default details. The uploaded logo is kept.</p>
+    <div class="dlg-actions">
+      <button type="button" class="btn btn-ghost" id="resetNo">Cancel</button>
+      <button type="button" class="btn btn-danger" id="resetYes">Yes, reset</button>
+    </div>
+  </div>
+</dialog>
+
+<datalist id="dl-dept">
+  <option value="Computer Science and Engineering"></option>
+  <option value="Electrical and Electronic Engineering"></option>
+  <option value="Civil and Environmental Engineering"></option>
+  <option value="Industrial and Production Engineering"></option>
+  <option value="Chemical Engineering and Polymer Science"></option>
+  <option value="Food Engineering and Tea Technology"></option>
+  <option value="Software Engineering"></option>
+  <option value="Architecture"></option>
+  <option value="Statistics"></option>
+  <option value="Mathematics"></option>
+  <option value="Physics"></option>
+  <option value="Chemistry"></option>
+  <option value="Biochemistry and Molecular Biology"></option>
+  <option value="Genetic Engineering and Biotechnology"></option>
+  <option value="Geography and Environment"></option>
+  <option value="Geology and Petroleum Geology"></option>
+  <option value="Oceanography"></option>
+  <option value="Forestry and Environmental Science"></option>
+  <option value="Economics"></option>
+  <option value="Political Studies"></option>
+  <option value="Public Administration"></option>
+  <option value="Sociology"></option>
+  <option value="Social Work"></option>
+  <option value="Anthropology"></option>
+  <option value="Business Administration"></option>
+  <option value="English"></option>
+  <option value="Bangla"></option>
+  <option value="Physical Education and Sports Science"></option>
+</datalist>
+<datalist id="dl-degree">
+  <option value="B.Sc. (Honours)"></option>
+  <option value="B.Sc. in Engineering"></option>
+  <option value="B.Sc. in Architecture"></option>
+  <option value="B.A. (Honours)"></option>
+  <option value="B.S.S. (Honours)"></option>
+  <option value="B.B.A."></option>
+  <option value="M.Sc."></option>
+  <option value="M.A."></option>
+  <option value="M.S.S."></option>
+  <option value="M.B.A."></option>
+</datalist>
+<datalist id="dl-year">
+  <option value="1st Year"></option>
+  <option value="2nd Year"></option>
+  <option value="3rd Year"></option>
+  <option value="4th Year"></option>
+  <option value="5th Year"></option>
+</datalist>
+<datalist id="dl-sem">
+  <option value="1st Semester"></option>
+  <option value="2nd Semester"></option>
+  <option value="3rd Semester"></option>
+  <option value="4th Semester"></option>
+</datalist>
+<datalist id="dl-desig">
+  <option value="Professor"></option>
+  <option value="Associate Professor"></option>
+  <option value="Assistant Professor"></option>
+  <option value="Lecturer"></option>
+</datalist>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function(){
+'use strict';
+
+/* ============================================================
+   LOGO
+   Order of preference:
+   1) Logo uploaded through the page (saved in this browser)
+   2) EMBEDDED_LOGO below (paste a data:image/... URI here to bake it in)
+   3) A file named sust-logo.png (or .svg/.jpg) beside index.html
+   ============================================================ */
+var EMBEDDED_LOGO = "";
+var LOGO_FILES = ["sust-logo.png","sust-logo.svg","sust-logo.jpg","sust-logo.webp","logo.png","logo.svg"];
+
+/* ---------- Form definition ---------- */
+var SECTIONS = [
+  {title:"Student Information", fields:[
+    {id:"studentName", label:"Student Name", ph:"Your full name", req:1, span:2},
+    {id:"studentId", label:"Student ID / Registration No.", ph:"Your ID number", req:1},
+    {id:"batch", label:"Batch", ph:"e.g. 31", opt:1},
+    {id:"department", label:"Department", ph:"Select or type your department", req:1, list:"dl-dept", span:2},
+    {id:"degree", label:"Degree / Program", ph:"e.g. B.Sc. (Honours)", opt:1, list:"dl-degree", span:2},
+    {id:"year", label:"Year", ph:"e.g. 3rd Year", req:1, list:"dl-year"},
+    {id:"semester", label:"Semester", ph:"e.g. 1st Semester", req:1, list:"dl-sem"},
+    {id:"session", label:"Academic Session", ph:"e.g. 2021-22", req:1, span:2}
+  ]},
+  {title:"Assignment Information", fields:[
+    {id:"assignmentTitle", label:"Assignment Title", ph:"e.g. Regression Analysis of Housing Prices", req:1, span:2},
+    {id:"assignmentNo", label:"Assignment Number", ph:"e.g. 01", opt:1},
+    {id:"courseCode", label:"Course Code", ph:"e.g. STA 301", req:1},
+    {id:"courseTitle", label:"Course Title", ph:"e.g. Regression Analysis", req:1, span:2},
+    {id:"submissionDate", label:"Submission Date", type:"date", req:1, span:2}
+  ]},
+  {title:"Course Teacher", fields:[
+    {id:"teacherName", label:"Teacher's Name", ph:"Teacher's full name", req:1, span:2},
+    {id:"designation", label:"Designation", ph:"e.g. Professor", req:1, list:"dl-desig", span:2},
+    {id:"teacherDept", label:"Department", ph:"Defaults to your department if left blank", opt:1, list:"dl-dept", span:2},
+    {id:"faculty", label:"Faculty", ph:"e.g. Faculty / School name", opt:1, span:2}
+  ]},
+  {title:"Additional Information", fields:[
+    {id:"groupNo", label:"Group Number", ph:"e.g. 05", opt:1, span:2},
+    {id:"members", label:"Group Members", ph:"One per line: Name — ID", opt:1, type:"textarea", span:2},
+    {id:"remarks", label:"Remarks", ph:"Any note for the cover page", opt:1, type:"textarea", span:2}
+  ]}
+];
+var REQUIRED = [];
+SECTIONS.forEach(function(s){s.fields.forEach(function(f){ if(f.req) REQUIRED.push(f.id); });});
+var ALL_IDS = [];
+SECTIONS.forEach(function(s){s.fields.forEach(function(f){ ALL_IDS.push(f.id); });});
+
+/* Default values (all editable by the user) */
+var DEFAULTS = {
+  studentName:"Md Salek Miah",
+  studentId:"2021134066",
+  batch:"31",
+  department:"Statistics",
+  year:"4th Year",
+  semester:"1st Semester",
+  session:"2021-22",
+  teacherName:"Dr. Jamal Uddin",
+  designation:"Professor",
+  teacherDept:"Statistics"
+};
+function applyDefaults(){
+  ALL_IDS.forEach(function(id){ $(id).value = DEFAULTS[id] || ""; });
+}
+
+var STORE_KEY = "sustCoverMaker.v2";
+var LOGO_KEY = "sustCoverMaker.logo";
+var TPL_KEY = "sustCoverMaker.tpl";
+
+var state = {tpl:"A", logo:"", logoSource:"", zoom:"fit"};
+var $ = function(id){return document.getElementById(id);};
+
+function esc(s){
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+function safeGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function safeSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } }
+function safeDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
+
+/* ---------- Build form ---------- */
+function buildForm(){
+  var html = "";
+  SECTIONS.forEach(function(sec){
+    html += '<div class="card"><h2>'+esc(sec.title)+'</h2><div class="grid">';
+    sec.fields.forEach(function(f){
+      var cls = "field"+(f.span===2?" span2":"");
+      var tag = f.type==="textarea" ? "textarea" : "input";
+      var attrs = ' id="'+f.id+'" name="'+f.id+'"'+(f.ph?' placeholder="'+esc(f.ph)+'"':'');
+      if(tag==="input"){ attrs += ' type="'+(f.type||"text")+'"'; if(f.list) attrs += ' list="'+f.list+'"'; }
+      else { attrs += ' rows="3"'; }
+      html += '<div class="'+cls+'" data-field="'+f.id+'">'+
+        '<label for="'+f.id+'"><span>'+esc(f.label)+(f.req?' <span class="req">*</span>':'')+'</span>'+(f.opt?'<span class="opt">Optional</span>':'')+'</label>'+
+        '<'+tag+attrs+(tag==="textarea"?'></textarea>':'>')+
+        '<div class="err">This field is required.</div></div>';
+    });
+    html += '</div></div>';
+  });
+  $("formMount").innerHTML = html;
+}
+
+function getData(){
+  var d = {};
+  ALL_IDS.forEach(function(id){
+    var el = $(id);
+    d[id] = el ? el.value.trim() : "";
+  });
+  return d;
+}
+
+/* ---------- Cover rendering ---------- */
+function deptLabel(v){
+  v = (v||"").trim();
+  if(!v) return "";
+  if(/^(department|dept\.?|institute|school|faculty|centre|center)\b/i.test(v)) return v;
+  return "Department of " + v;
+}
+function fmtDate(v){
+  if(!v) return "";
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
+  if(!m) return v;
+  var dt = new Date(+m[1], +m[2]-1, +m[3]);
+  try{ return dt.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}); }
+  catch(e){ return v; }
+}
+function val(v, placeholder){
+  return v ? esc(v) : '<span class="ph">'+esc(placeholder)+'</span>';
+}
+function titleSize(len, tpl){
+  var s = tpl==="A" ? [40,34,28,23,19] : [34,29,24,20,17];
+  var t = len<=30?0 : len<=60?1 : len<=100?2 : len<=150?3 : 4;
+  return s[t];
+}
+function membersHTML(text){
+  var lines = text.split(/\r?\n/).map(function(x){return x.trim();}).filter(Boolean);
+  if(!lines.length) return "";
+  var cols = lines.length>8 ? 3 : lines.length>3 ? 2 : 1;
+  var fs = lines.length>12 ? 10.5 : lines.length>6 ? 11.5 : 12;
+  return '<ul class="members" style="column-count:'+cols+';font-size:'+fs+'px">'+
+    lines.map(function(l){return '<li>'+esc(l)+'</li>';}).join("")+'</ul>';
+}
+function logoHTML(forExport){
+  if(state.logo) return '<img class="c-logo" src="'+state.logo+'" alt="SUST logo">';
+  return forExport ? "" : '<div class="c-logo-ph">SUST<br>logo</div>';
+}
+
+function coverHTML(d, tpl, forExport){
+  var dept = deptLabel(d.department);
+  var tDept = deptLabel(d.teacherDept || d.department);
+  var date = fmtDate(d.submissionDate);
+  var assignHead = d.assignmentNo ? "Assignment No. "+esc(d.assignmentNo) : "Assignment";
+  var tSize = titleSize((d.assignmentTitle||"Assignment Title").length, tpl);
+  var members = membersHTML(d.members);
+  var hasGroup = d.groupNo || members;
+
+  var toRows = [
+    ["Name", val(d.teacherName,"Teacher's name")],
+    ["Designation", val(d.designation,"Designation")],
+    ["Department", tDept ? esc(tDept) : '<span class="ph">Department</span>']
+  ];
+  if(d.faculty) toRows.push(["Faculty", esc(d.faculty)]);
+
+  var byRows = [
+    ["Name", val(d.studentName,"Student name")],
+    ["ID", val(d.studentId,"Student ID")],
+    ["Department", dept ? esc(dept) : '<span class="ph">Department</span>']
+  ];
+  if(d.batch) byRows.push(["Batch", esc(d.batch)]);
+  byRows.push(["Year", val(d.year,"Year")]);
+  byRows.push(["Semester", val(d.semester,"Semester")]);
+  byRows.push(["Session", val(d.session,"Session")]);
+
+  var groupLine = d.groupNo ? '<div><b>Group No.</b> '+esc(d.groupNo)+'</div>' : "";
+  var remarks = d.remarks ? '<div class="rem">'+esc(d.remarks).replace(/\n/g,"<br>")+'</div>' : "";
+
+  if(tpl==="A"){
+    var rowsA = function(rows){
+      return rows.map(function(r){return '<div class="row"><span class="l">'+r[0]+'</span><span class="v">'+r[1]+'</span></div>';}).join("");
     };
+    return '<div class="cv cvA">'+
+      '<div class="frame"></div><div class="frame2"></div>'+
+      '<i class="cn tl"></i><i class="cn tr"></i><i class="cn bl"></i><i class="cn br"></i>'+
+      '<div class="inner">'+
+        '<div class="head">'+logoHTML(forExport)+
+          '<div class="uni">Shahjalal University of<br>Science and Technology</div>'+
+          '<div class="loc">Sylhet, Bangladesh</div>'+
+          '<div class="dept">'+(dept?esc(dept):'<span class="ph">Department</span>')+'</div>'+
+          (d.degree?'<div class="deg">'+esc(d.degree)+'</div>':'')+
+          '<div class="dv"><span></span><i></i><span></span></div>'+
+        '</div>'+
+        '<div class="main">'+
+          '<div class="kicker">'+assignHead+'</div>'+
+          '<div class="atitle" style="font-size:'+tSize+'px">'+(d.assignmentTitle?esc(d.assignmentTitle):'<span class="ph">Assignment Title</span>')+'</div>'+
+          '<div class="course">'+
+            '<span class="cl">Course Title</span><span class="cv-val">'+val(d.courseTitle,"Course title")+'</span>'+
+            '<span class="cl">Course Code</span><span class="cv-val">'+val(d.courseCode,"Course code")+'</span>'+
+          '</div>'+
+        '</div>'+
+        '<div class="info">'+
+          '<div class="box"><h4>Submitted To</h4>'+rowsA(toRows)+'</div>'+
+          '<div class="box"><h4>Submitted By</h4>'+rowsA(byRows)+'</div>'+
+        '</div>'+
+        '<div class="bottom">'+
+          '<div class="dt"><b>Date of Submission:</b> '+(date?esc(date):'<span class="ph">Submission date</span>')+'</div>'+
+          (hasGroup?'<div class="grp">'+groupLine+members+'</div>':'')+
+          remarks+
+          '<div class="foot">Shahjalal University of Science and Technology</div>'+
+        '</div>'+
+      '</div></div>';
+  }
 
-    const requiredFields = [
-      'studentName', 'studentId', 'department', 'degree',
-      'academicYear', 'term', 'session',
-      'assignmentTitle', 'courseCode', 'courseTitle', 'submissionDate',
-      'teacherName', 'designation', 'teacherDept'
-    ];
+  var secB = function(title, rows){
+    return '<div class="sec"><h4>'+title+'</h4><div class="g">'+
+      rows.map(function(r){return '<div class="it"><span class="l">'+r[0]+'</span><span class="v">'+r[1]+'</span></div>';}).join("")+
+      '</div></div>';
+  };
+  return '<div class="cv cvB">'+
+    '<div class="top"></div><div class="c1"></div><div class="c2"></div>'+
+    '<div class="inner">'+
+      '<div class="head">'+logoHTML(forExport)+
+        '<div>'+
+          '<div class="uni">Shahjalal University of<br>Science and Technology</div>'+
+          '<div class="loc">Sylhet, Bangladesh</div>'+
+          '<div class="dept">'+(dept?esc(dept):'<span class="ph">Department</span>')+'</div>'+
+          (d.degree?'<div class="deg">'+esc(d.degree)+'</div>':'')+
+        '</div>'+
+      '</div>'+
+      '<div class="rule"></div>'+
+      '<div class="main">'+
+        '<div class="kicker">'+assignHead+'</div>'+
+        '<div class="atitle" style="font-size:'+tSize+'px">'+(d.assignmentTitle?esc(d.assignmentTitle):'<span class="ph">Assignment Title</span>')+'</div>'+
+        '<div class="course">'+
+          '<div><span class="cl">Course Title</span><span class="cv-val">'+val(d.courseTitle,"Course title")+'</span></div>'+
+          '<div><span class="cl">Course Code</span><span class="cv-val">'+val(d.courseCode,"Course code")+'</span></div>'+
+        '</div>'+
+      '</div>'+
+      secB("Submitted To", toRows)+
+      secB("Submitted By", byRows)+
+      '<div class="bottom">'+
+        '<div class="dt"><span class="l">Date of Submission</span><span class="v">'+(date?esc(date):'<span class="ph">Submission date</span>')+'</span></div>'+
+        ((hasGroup||remarks)?'<div class="grp">'+groupLine+members+remarks+'</div>':'')+
+      '</div>'+
+    '</div></div>';
+}
 
-    // ========== Live Preview Update ==========
-    function updatePreview() {
-      // Assignment
-      const title = fields.assignmentTitle.value.trim() || '[Assignment Title]';
-      document.getElementById('pvAssignmentTitle').textContent = title;
+/* ---------- Preview ---------- */
+function render(){
+  $("mount").innerHTML = coverHTML(getData(), state.tpl, false);
+  layoutPreview();
+}
+function layoutPreview(){
+  var stage = $("stage");
+  var avail = stage.clientWidth - (parseFloat(getComputedStyle(stage).paddingLeft)||0)*2;
+  var s = state.zoom==="fit" ? Math.min(1, Math.max(0.2, avail/793)) : 1;
+  $("scaler").style.width = (793*s)+"px";
+  $("scaler").style.height = (1122*s)+"px";
+  $("mount").style.transform = "scale("+s+")";
+}
 
-      const aNo = fields.assignmentNo.value.trim();
-      const aNoEl = document.getElementById('pvAssignmentNo');
-      if (aNo) {
-        aNoEl.style.display = 'block';
-        aNoEl.textContent = 'Assignment No. ' + aNo;
-      } else {
-        aNoEl.style.display = 'none';
-      }
+/* ---------- Persistence ---------- */
+function save(){
+  safeSet(STORE_KEY, JSON.stringify(getData()));
+}
+function restore(){
+  applyDefaults();
+  var raw = safeGet(STORE_KEY);
+  if(raw){
+    try{
+      var d = JSON.parse(raw);
+      ALL_IDS.forEach(function(id){ if(d[id] != null && $(id)) $(id).value = d[id]; });
+    }catch(e){}
+  }
+  var t = safeGet(TPL_KEY);
+  if(t==="A"||t==="B") state.tpl = t;
+}
 
-      const code = fields.courseCode.value.trim() || '[Course Code]';
-      const cTitle = fields.courseTitle.value.trim() || '[Course Title]';
-      document.getElementById('pvCourseInfo').textContent = 'Course: ' + code + ' — ' + cTitle;
+/* ---------- Toast ---------- */
+function toast(msg, type){
+  var el = document.createElement("div");
+  el.className = "toast"+(type==="error"?" error":"");
+  el.textContent = msg;
+  $("toasts").appendChild(el);
+  requestAnimationFrame(function(){ el.classList.add("show"); });
+  setTimeout(function(){
+    el.classList.remove("show");
+    setTimeout(function(){ el.remove(); }, 250);
+  }, type==="error" ? 4200 : 2800);
+}
 
-      const dateVal = fields.submissionDate.value;
-      let dateStr = '[Date]';
-      if (dateVal) {
-        const d = new Date(dateVal + 'T00:00:00');
-        dateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
-      }
-      document.getElementById('pvSubmissionDate').textContent = 'Submission Date: ' + dateStr;
+/* ---------- Validation ---------- */
+function validate(){
+  var first = null;
+  REQUIRED.forEach(function(id){
+    var wrap = document.querySelector('[data-field="'+id+'"]');
+    var ok = $(id).value.trim() !== "";
+    wrap.classList.toggle("invalid", !ok);
+    if(!ok && !first) first = id;
+  });
+  if(first){
+    var el = $(first);
+    el.scrollIntoView({behavior:"smooth", block:"center"});
+    setTimeout(function(){ el.focus({preventScroll:true}); }, 350);
+    toast("Please fill in the required fields (*).", "error");
+    return false;
+  }
+  return true;
+}
 
-      // Student
-      document.getElementById('pvStudentName').textContent = fields.studentName.value.trim() || '—';
-      document.getElementById('pvStudentId').textContent = fields.studentId.value.trim() || '—';
-      document.getElementById('pvDepartment').textContent = fields.department.value.trim() || '—';
-      document.getElementById('pvDegree').textContent = fields.degree.value.trim() || '—';
-      document.getElementById('pvAcademicYear').textContent = fields.academicYear.value.trim() || '—';
-      document.getElementById('pvTerm').textContent = fields.term.value.trim() || '—';
-      document.getElementById('pvSession').textContent = fields.session.value.trim() || '—';
-
-      const batch = fields.batch.value.trim();
-      const batchRow = document.getElementById('pvBatchRow');
-      if (batch) {
-        batchRow.style.display = 'table-row';
-        document.getElementById('pvBatch').textContent = batch;
-      } else {
-        batchRow.style.display = 'none';
-      }
-
-      // Submitted To
-      document.getElementById('pvTeacherName').textContent = fields.teacherName.value.trim() || '—';
-      document.getElementById('pvDesignation').textContent = fields.designation.value.trim() || '—';
-      document.getElementById('pvTeacherDept').textContent = (fields.teacherDept.value.trim() ? 'Department of ' + fields.teacherDept.value.trim() : '—');
-
-      const faculty = fields.faculty.value.trim();
-      const facEl = document.getElementById('pvFaculty');
-      if (faculty) {
-        facEl.style.display = 'block';
-        facEl.textContent = faculty;
-      } else {
-        facEl.style.display = 'none';
-      }
-
-      // Submitted By
-      document.getElementById('pvByName').textContent = fields.studentName.value.trim() || '—';
-      document.getElementById('pvById').textContent = fields.studentId.value.trim() ? 'ID: ' + fields.studentId.value.trim() : '—';
-      document.getElementById('pvByDept').textContent = fields.department.value.trim() ? 'Department of ' + fields.department.value.trim() : '—';
-
-      const gNo = fields.groupNo.value.trim();
-      const gNoEl = document.getElementById('pvGroupNo');
-      if (gNo) {
-        gNoEl.style.display = 'block';
-        gNoEl.textContent = 'Group: ' + gNo;
-      } else {
-        gNoEl.style.display = 'none';
-      }
-
-      // Group Members
-      const members = fields.groupMembers.value.trim();
-      const memSec = document.getElementById('pvGroupMembersSection');
-      if (members) {
-        memSec.style.display = 'block';
-        document.getElementById('pvGroupMembers').textContent = members;
-      } else {
-        memSec.style.display = 'none';
-      }
-
-      // Remarks
-      const remarks = fields.remarks.value.trim();
-      const remSec = document.getElementById('pvRemarksSection');
-      if (remarks) {
-        remSec.style.display = 'block';
-        document.getElementById('pvRemarks').textContent = remarks;
-      } else {
-        remSec.style.display = 'none';
-      }
-    }
-
-    // Attach live listeners
-    Object.values(fields).forEach(el => {
-      el.addEventListener('input', updatePreview);
-      el.addEventListener('change', updatePreview);
-    });
-
-    // Set default date to today
-    const today = new Date().toISOString().split('T')[0];
-    fields.submissionDate.value = today;
-    updatePreview();
-
-    // ========== Validation ==========
-    function validate() {
-      let valid = true;
-      requiredFields.forEach(key => {
-        const el = fields[key];
-        const group = el.closest('.form-group');
-        if (!el.value.trim()) {
-          group.classList.add('has-error');
-          el.classList.add('error');
-          valid = false;
-        } else {
-          group.classList.remove('has-error');
-          el.classList.remove('error');
-        }
-      });
-      return valid;
-    }
-
-    // Clear error on input
-    requiredFields.forEach(key => {
-      fields[key].addEventListener('input', function () {
-        if (this.value.trim()) {
-          this.classList.remove('error');
-          this.closest('.form-group').classList.remove('has-error');
-        }
-      });
-    });
-
-    // ========== Toast ==========
-    function showToast(msg, duration = 3000) {
-      const toast = document.getElementById('toast');
-      toast.textContent = msg;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), duration);
-    }
-
-    // ========== Reset ==========
-    document.getElementById('resetBtn').addEventListener('click', () => {
-      if (confirm('Are you sure you want to reset all fields? This cannot be undone.')) {
-        Object.values(fields).forEach(el => {
-          if (el.type === 'date') el.value = today;
-          else el.value = '';
-          el.classList.remove('error');
-          el.closest('.form-group')?.classList.remove('has-error');
-        });
-        updatePreview();
-        showToast('All fields have been reset.');
-      }
-    });
-
-    // ========== Scroll to Preview ==========
-    document.getElementById('scrollPreviewBtn').addEventListener('click', () => {
-      document.querySelector('.preview-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-
-    // ========== PDF Download ==========
-    document.getElementById('downloadBtn').addEventListener('click', async () => {
-      if (!validate()) {
-        showToast('Please fill in all required fields (*) before downloading.');
-        // Scroll to first error
-        const firstError = document.querySelector('.form-group.has-error');
-        if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+/* ---------- Logo handling ---------- */
+function setLogo(src, source){
+  state.logo = src || "";
+  state.logoSource = src ? source : "";
+  var has = !!src;
+  $("hdrLogo").src = has ? src : "";
+  $("hdrLogoWrap").classList.toggle("on", has);
+  $("logoThumb").innerHTML = has ? '<img alt="" src="'+src+'">' : "No logo";
+  $("logoStatus").textContent = has ? "Logo loaded" : "Logo not loaded";
+  $("logoHelp").innerHTML = has
+    ? (source==="upload" ? "Using the logo you uploaded." : source==="embedded" ? "Using the built-in logo." : "Using the logo file beside this page.")
+    : 'Put <code>sust-logo.png</code> next to this page, or upload the official logo once (it is remembered in this browser).';
+  $("logoClearBtn").hidden = source!=="upload" || !has;
+  render();
+}
+function blobToDataURL(blob){
+  return new Promise(function(res, rej){
+    var r = new FileReader();
+    r.onload = function(){ res(r.result); };
+    r.onerror = rej;
+    r.readAsDataURL(blob);
+  });
+}
+async function autoLoadLogo(){
+  var up = safeGet(LOGO_KEY);
+  if(up){ setLogo(up, "upload"); return; }
+  if(EMBEDDED_LOGO){ setLogo(EMBEDDED_LOGO, "embedded"); return; }
+  for(var i=0;i<LOGO_FILES.length;i++){
+    try{
+      var res = await fetch(LOGO_FILES[i], {cache:"no-cache"});
+      var ct = res.headers.get("content-type") || "";
+      if(res.ok && /^image\//i.test(ct)){
+        var data = await blobToDataURL(await res.blob());
+        setLogo(data, "file");
         return;
       }
+    }catch(e){ /* try next */ }
+  }
+}
+function onLogoFile(e){
+  var f = e.target.files && e.target.files[0];
+  e.target.value = "";
+  if(!f) return;
+  if(!/^image\//.test(f.type)){ toast("Please choose an image file.", "error"); return; }
+  if(f.size > 4*1024*1024){ toast("Logo is too large (max 4 MB).", "error"); return; }
+  blobToDataURL(f).then(function(data){
+    var saved = safeSet(LOGO_KEY, data);
+    setLogo(data, "upload");
+    toast(saved ? "Logo uploaded and saved." : "Logo loaded for this session.");
+  }).catch(function(){ toast("Could not read that file.", "error"); });
+}
 
-      const btn = document.getElementById('downloadBtn');
-      btn.classList.add('loading');
-      btn.disabled = true;
+/* ---------- Export helpers ---------- */
+function waitForAssets(root){
+  var fonts = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+  var loads = [];
+  if(document.fonts && document.fonts.load){
+    loads = [
+      document.fonts.load('700 28px "Cormorant Garamond"'),
+      document.fonts.load('400 14px Inter'),
+      document.fonts.load('600 14px Inter'),
+      document.fonts.load('700 14px Inter'),
+      document.fonts.load('800 14px Inter')
+    ].map(function(p){ return p.catch(function(){}); });
+  }
+  var imgs = Array.prototype.slice.call(root.querySelectorAll("img")).map(function(img){
+    if(img.complete && img.naturalWidth) return Promise.resolve();
+    return new Promise(function(res){ img.onload = img.onerror = res; });
+  });
+  var timeout = new Promise(function(res){ setTimeout(res, 6000); });
+  return Promise.race([Promise.all([fonts].concat(loads, imgs)), timeout]);
+}
+function buildOffscreen(){
+  var host = document.createElement("div");
+  host.style.cssText = "position:fixed;left:-10000px;top:0;width:793px;height:1122px;z-index:-1;background:#fff";
+  host.innerHTML = coverHTML(getData(), state.tpl, true);
+  document.body.appendChild(host);
+  return host;
+}
+function fileName(){
+  var d = getData();
+  var base = ["SUST", d.courseCode || "Assignment", d.studentId || ""].filter(Boolean).join("_");
+  return base.replace(/[^A-Za-z0-9_\-]+/g, "_").replace(/_+/g,"_") + "_Cover.pdf";
+}
+function confirmNoLogo(){
+  if(state.logo) return true;
+  return window.confirm("The SUST logo is not loaded, so the cover will have no logo. Continue anyway?");
+}
 
-      try {
-        const cover = document.getElementById('coverPage');
-
-        // Temporarily enlarge for better quality capture
-        const originalStyle = cover.style.cssText;
-        cover.style.width = '794px';   // ~A4 at 96dpi
-        cover.style.maxWidth = '794px';
-        cover.style.height = '1123px';
-        cover.style.aspectRatio = 'auto';
-        cover.style.padding = '48px 56px';
-
-        // Scale fonts slightly for print quality
-        const allText = cover.querySelectorAll('*');
-        const fontBackup = [];
-        allText.forEach(el => {
-          fontBackup.push(el.style.fontSize);
-        });
-
-        await new Promise(r => setTimeout(r, 100)); // allow reflow
-
-        const canvas = await html2canvas(cover, {
-          scale: 2,
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: '#ffffff',
-          logging: false,
-          width: 794,
-          height: 1123
-        });
-
-        // Restore
-        cover.style.cssText = originalStyle;
-
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF({
-          orientation: 'portrait',
-          unit: 'mm',
-          format: 'a4'
-        });
-
-        const imgData = canvas.toDataURL('image/jpeg', 0.95);
-        const pdfWidth = 210;
-        const pdfHeight = 297;
-        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-
-        const fileName = 'SUST_Assignment_Cover_' +
-          (fields.studentId.value.trim() || 'Cover') + '_' +
-          (fields.courseCode.value.trim().replace(/\s+/g, '') || 'Assignment') + '.pdf';
-
-        pdf.save(fileName);
-        showToast('PDF downloaded successfully!');
-      } catch (err) {
-        console.error(err);
-        showToast('Error generating PDF. Please try again or use Print.');
-      } finally {
-        btn.classList.remove('loading');
-        btn.disabled = false;
-      }
+async function downloadPDF(){
+  if(!validate()) return;
+  if(!confirmNoLogo()) return;
+  if(!window.html2canvas || !window.jspdf){
+    toast("PDF libraries could not load. Check your internet connection and reload.", "error");
+    return;
+  }
+  var btn = $("btnDownload");
+  btn.disabled = true;
+  $("loader").classList.add("on");
+  var host = null;
+  try{
+    host = buildOffscreen();
+    await waitForAssets(host);
+    await new Promise(function(r){ requestAnimationFrame(function(){ requestAnimationFrame(r); }); });
+    var mobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    var canvas = await html2canvas(host.firstElementChild, {
+      scale: mobile ? 2 : 3,
+      backgroundColor: "#ffffff",
+      useCORS: true,
+      logging: false,
+      width: 793, height: 1122,
+      windowWidth: 793, windowHeight: 1122,
+      scrollX: 0, scrollY: 0
     });
+    var jsPDF = window.jspdf.jsPDF;
+    var pdf = new jsPDF({orientation:"portrait", unit:"mm", format:"a4", compress:true});
+    pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, 210, 297, undefined, "FAST");
+    pdf.setProperties({title:"Assignment Cover Page", author:"SUST Cover Maker"});
+    pdf.save(fileName());
+    toast("Cover page downloaded successfully.");
+  }catch(err){
+    console.error(err);
+    toast("Could not generate the PDF. Please try again.", "error");
+  }finally{
+    if(host) host.remove();
+    $("loader").classList.remove("on");
+    btn.disabled = false;
+  }
+}
 
-    // ========== Print ==========
-    document.getElementById('printBtn').addEventListener('click', () => {
-      if (!validate()) {
-        showToast('Please fill in all required fields (*) before printing.');
-        return;
-      }
-      window.print();
-    });
+async function printCover(){
+  if(!validate()) return;
+  if(!confirmNoLogo()) return;
+  var area = $("printArea");
+  area.innerHTML = coverHTML(getData(), state.tpl, true);
+  await waitForAssets(area);
+  var cleanup = function(){ area.innerHTML = ""; window.removeEventListener("afterprint", cleanup); };
+  window.addEventListener("afterprint", cleanup);
+  setTimeout(function(){ window.print(); }, 60);
+}
 
-    // Preload logo for canvas
-    const logoImg = new Image();
-    logoImg.crossOrigin = 'anonymous';
-    logoImg.src = document.getElementById('coverLogo').src;
-  </script>
+/* ---------- Reset ---------- */
+function doReset(){
+  applyDefaults();
+  document.querySelectorAll(".field.invalid").forEach(function(n){ n.classList.remove("invalid"); });
+  safeDel(STORE_KEY);
+  render();
+  toast("Fields reset to defaults.");
+}
+
+/* ---------- Init ---------- */
+function setTemplate(t){
+  state.tpl = t;
+  safeSet(TPL_KEY, t);
+  document.querySelectorAll("[data-tpl]").forEach(function(b){
+    b.setAttribute("aria-pressed", b.getAttribute("data-tpl")===t ? "true" : "false");
+  });
+  render();
+}
+function setZoom(z){
+  state.zoom = z;
+  document.querySelectorAll("[data-zoom]").forEach(function(b){
+    b.setAttribute("aria-pressed", b.getAttribute("data-zoom")===z ? "true" : "false");
+  });
+  layoutPreview();
+}
+
+function init(){
+  buildForm();
+  restore();
+
+  $("coverForm").addEventListener("input", function(e){
+    var wrap = e.target.closest && e.target.closest(".field");
+    if(wrap && e.target.value.trim()) wrap.classList.remove("invalid");
+    render(); save();
+  });
+  $("coverForm").addEventListener("submit", function(e){ e.preventDefault(); });
+  $("coverForm").addEventListener("keydown", function(e){
+    if(e.key==="Enter" && e.target.tagName==="INPUT") e.preventDefault();
+  });
+
+  document.querySelectorAll("[data-tpl]").forEach(function(b){
+    b.addEventListener("click", function(){ setTemplate(b.getAttribute("data-tpl")); });
+  });
+  document.querySelectorAll("[data-zoom]").forEach(function(b){
+    b.addEventListener("click", function(){ setZoom(b.getAttribute("data-zoom")); });
+  });
+
+  $("btnDownload").addEventListener("click", downloadPDF);
+  $("btnPrint").addEventListener("click", printCover);
+  $("btnReset").addEventListener("click", function(){
+    var dlg = $("resetDlg");
+    if(dlg.showModal) dlg.showModal();
+    else if(window.confirm("Reset all fields?")) doReset();
+  });
+  $("resetNo").addEventListener("click", function(){ $("resetDlg").close(); });
+  $("resetYes").addEventListener("click", function(){ $("resetDlg").close(); doReset(); });
+
+  $("logoUploadBtn").addEventListener("click", function(){ $("logoFile").click(); });
+  $("logoFile").addEventListener("change", onLogoFile);
+  $("logoClearBtn").addEventListener("click", function(){
+    safeDel(LOGO_KEY);
+    setLogo("", "");
+    autoLoadLogo();
+    toast("Uploaded logo removed.");
+  });
+
+  window.addEventListener("resize", layoutPreview);
+  if(window.ResizeObserver) new ResizeObserver(layoutPreview).observe($("stage"));
+
+  setTemplate(state.tpl);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(render);
+  autoLoadLogo();
+}
+
+if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", init);
+else init();
+})();
+</script>
 </body>
 </html>
