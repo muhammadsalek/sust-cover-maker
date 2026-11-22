@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SUST Cover Maker - Professional Assignment Cover Page Generator for Shahjalal University of Science and Technology students" />
+  <title>SUST Cover Maker | Assignment Cover Page Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root {
+      --primary: #0d5c3d;
+      --primary-dark: #08432c;
+      --primary-light: #1a7a52;
+      --accent: #c9a227;
+      --bg: #f4f7f5;
+      --card: #ffffff;
+      --text: #1a2e25;
+      --text-muted: #5a6d64;
+      --border: #d4e0d9;
+      --shadow: 0 4px 20px rgba(13, 92, 61, 0.08);
+      --shadow-lg: 0 10px 40px rgba(13, 92, 61, 0.12);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --transition: 0.25s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%);
+      color: white;
+      padding: 1.25rem 1.5rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-logo {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+      background: white;
+      border-radius: 50%;
+      padding: 4px;
+      flex-shrink: 0;
+    }
+
+    .header-text h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .header-text p {
+      font-size: 0.8rem;
+      opacity: 0.9;
+      margin-top: 2px;
+    }
+
+    /* Hero */
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 1.5rem;
+      text-align: center;
+    }
+
+    .hero h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      max-width: 640px;
+      margin: 0 auto;
+      font-size: 0.95rem;
+    }
+
+    /* Main Layout */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 1024px) {
+      .container {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+      }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: box-shadow var(--transition);
+    }
+
+    .card:hover { box-shadow: var(--shadow-lg); }
+
+    .card-header {
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      padding: 0.9rem 1.25rem;
+      font-weight: 600;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-body { padding: 1.25rem; }
+
+    /* Form */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media (min-width: 480px) {
+      .form-grid { grid-template-columns: 1fr 1fr; }
+      .form-grid .full { grid-column: 1 / -1; }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .form-group label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .form-group label .optional {
+      font-weight: 400;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 0.6rem 0.85rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-family: inherit;
+      color: var(--text);
+      background: #fafcfb;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(13, 92, 61, 0.15);
+      background: white;
+    }
+
+    .form-group input.error,
+    .form-group select.error {
+      border-color: #c0392b;
+    }
+
+    .error-msg {
+      font-size: 0.75rem;
+      color: #c0392b;
+      display: none;
+    }
+
+    .form-group.has-error .error-msg { display: block; }
+
+    /* Sections spacing */
+    .form-section { margin-bottom: 1.5rem; }
+    .form-section:last-child { margin-bottom: 0; }
+
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.4rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all var(--transition);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      box-shadow: 0 4px 14px rgba(13, 92, 61, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(13, 92, 61, 0.4);
+    }
+
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      background: white;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-danger {
+      background: #fff5f5;
+      color: #c0392b;
+      border: 1.5px solid #e8b4b4;
+    }
+
+    .btn-danger:hover {
+      background: #c0392b;
+      color: white;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* Preview Panel */
+    .preview-panel {
+      position: sticky;
+      top: 90px;
+    }
+
+    .preview-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .preview-wrapper {
+      background: #e8eee9;
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      overflow: auto;
+      max-height: calc(100vh - 140px);
+    }
+
+    /* Cover Page - A4 aspect ratio simulation */
+    #coverPage {
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+      background: white;
+      aspect-ratio: 210 / 297;
+      padding: 28px 32px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+      font-family: 'Times New Roman', Times, serif;
+      color: #111;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 480px) {
+      #coverPage {
+        max-width: 460px;
+        padding: 32px 36px;
+      }
+    }
+
+    .cover-logo {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      margin: 0 auto 8px;
+      display: block;
+    }
+
+    .cover-uni-name {
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      line-height: 1.35;
+      margin-bottom: 2px;
+      text-transform: uppercase;
+    }
+
+    .cover-uni-loc {
+      text-align: center;
+      font-size: 11px;
+      margin-bottom: 14px;
+      color: #333;
+    }
+
+    .cover-divider {
+      border: none;
+      border-top: 1.5px solid #0d5c3d;
+      margin: 0 0 12px;
+    }
+
+    .cover-title {
+      text-align: center;
+      font-size: 15px;
+      font-weight: 700;
+      margin: 6px 0 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .cover-assignment-title {
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      line-height: 1.4;
+      min-height: 1.4em;
+    }
+
+    .cover-meta {
+      text-align: center;
+      font-size: 11.5px;
+      margin-bottom: 2px;
+      line-height: 1.45;
+    }
+
+    .cover-section {
+      margin-top: 14px;
+    }
+
+    .cover-section-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: underline;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .cover-info-table {
+      width: 100%;
+      font-size: 11.5px;
+      border-collapse: collapse;
+    }
+
+    .cover-info-table td {
+      padding: 2px 0;
+      vertical-align: top;
+    }
+
+    .cover-info-table .label {
+      width: 38%;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .cover-info-table .colon {
+      width: 12px;
+      text-align: center;
+    }
+
+    .cover-submitted {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 18px;
+      font-size: 11.5px;
+    }
+
+    .cover-submitted > div {
+      flex: 1;
+    }
+
+    .cover-submitted h4 {
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: underline;
+      margin-bottom: 6px;
+    }
+
+    .cover-submitted p {
+      margin-bottom: 2px;
+      line-height: 1.4;
+    }
+
+    .cover-footer-note {
+      margin-top: auto;
+      padding-top: 12px;
+      text-align: center;
+      font-size: 10px;
+      color: #555;
+      border-top: 1px solid #ddd;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--primary-dark);
+      color: white;
+      padding: 0.85rem 1.5rem;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.35s ease;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--primary-dark);
+      color: rgba(255,255,255,0.9);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .footer h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      color: white;
+    }
+
+    .footer p {
+      font-size: 0.85rem;
+      margin-bottom: 0.25rem;
+      opacity: 0.9;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer a:hover { text-decoration: underline; }
+
+    .footer-divider {
+      width: 60px;
+      height: 2px;
+      background: var(--accent);
+      margin: 1rem auto;
+      opacity: 0.6;
+    }
+
+    /* Loading spinner */
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    .btn.loading .spinner { display: inline-block; }
+    .btn.loading .btn-text { display: none; }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Instructions */
+    .instructions {
+      background: #eef6f1;
+      border: 1px solid #c5ddd0;
+      border-radius: var(--radius-sm);
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .instructions strong { color: var(--primary-dark); }
+
+    /* Print styles */
+    @media print {
+      body * { visibility: hidden; }
+      #coverPage, #coverPage * { visibility: visible; }
+      #coverPage {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 210mm;
+        height: 297mm;
+        max-width: none;
+        aspect-ratio: auto;
+        box-shadow: none;
+        padding: 20mm 18mm;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <img src="https://upload.wikimedia.org/wikipedia/bn/e/e0/%E0%A6%B6%E0%A6%BE%E0%A6%B9%E0%A6%9C%E0%A6%BE%E0%A6%B2%E0%A6%BE%E0%A6%B2_%E0%A6%AC%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%A8_%E0%A6%93_%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%AF%E0%A7%81%E0%A6%95%E0%A7%8D%E0%A6%A4%E0%A6%BF_%E0%A6%AC%E0%A6%BF%E0%A6%B6%E0%A7%8D%E0%A6%AC%E0%A6%AC%E0%A6%BF%E0%A6%A6%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%B2%E0%A6%AF%E0%A6%BC%E0%A7%87%E0%A6%B0_%E0%A6%B2%E0%A7%8B%E0%A6%97%E0%A7%8B.png" alt="SUST Logo" class="header-logo" id="headerLogo" />
+      <div class="header-text">
+        <h1>SUST Cover Maker</h1>
+        <p>Shahjalal University of Science and Technology · Sylhet</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h2>Assignment Cover Page Generator</h2>
+    <p>Create professional, university-standard assignment cover pages in seconds. Fill in your details and download a high-quality A4 PDF instantly.</p>
+  </section>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Left: Forms -->
+    <div class="forms-column">
+      <div class="instructions">
+        <strong>How to use:</strong> Fill in the required fields (marked with *). Optional fields can be left blank. The live preview updates automatically. When ready, click <strong>Download Cover Page (PDF)</strong>.
+      </div>
+
+      <!-- Student Information -->
+      <div class="card form-section">
+        <div class="card-header">👤 Student Information</div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="studentName">Student Name <span style="color:#c0392b">*</span></label>
+              <input type="text" id="studentName" placeholder="e.g. Md. Salek Miah" required />
+              <span class="error-msg">Student name is required</span>
+            </div>
+            <div class="form-group">
+              <label for="studentId">Student ID / Registration No. <span style="color:#c0392b">*</span></label>
+              <input type="text" id="studentId" placeholder="e.g. 2019331001" required />
+              <span class="error-msg">Student ID is required</span>
+            </div>
+            <div class="form-group">
+              <label for="department">Department <span style="color:#c0392b">*</span></label>
+              <input type="text" id="department" placeholder="e.g. Statistics" required />
+              <span class="error-msg">Department is required</span>
+            </div>
+            <div class="form-group full">
+              <label for="degree">Degree / Program <span style="color:#c0392b">*</span></label>
+              <input type="text" id="degree" placeholder="e.g. B.Sc. (Honours) in Statistics" required />
+              <span class="error-msg">Degree/Program is required</span>
+            </div>
+            <div class="form-group">
+              <label for="academicYear">Academic Year <span style="color:#c0392b">*</span></label>
+              <input type="text" id="academicYear" placeholder="e.g. 2024-2025" required />
+              <span class="error-msg">Academic year is required</span>
+            </div>
+            <div class="form-group">
+              <label for="term">Term / Semester <span style="color:#c0392b">*</span></label>
+              <input type="text" id="term" placeholder="e.g. 1st Semester" required />
+              <span class="error-msg">Term/Semester is required</span>
+            </div>
+            <div class="form-group">
+              <label for="session">Session <span style="color:#c0392b">*</span></label>
+              <input type="text" id="session" placeholder="e.g. 2019-20" required />
+              <span class="error-msg">Session is required</span>
+            </div>
+            <div class="form-group">
+              <label for="batch">Batch <span class="optional">(optional)</span></label>
+              <input type="text" id="batch" placeholder="e.g. 2019" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Assignment Information -->
+      <div class="card form-section">
+        <div class="card-header">📄 Assignment Information</div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="assignmentTitle">Assignment Title <span style="color:#c0392b">*</span></label>
+              <input type="text" id="assignmentTitle" placeholder="e.g. Statistical Analysis of Climate Data" required />
+              <span class="error-msg">Assignment title is required</span>
+            </div>
+            <div class="form-group">
+              <label for="assignmentNo">Assignment Number <span class="optional">(optional)</span></label>
+              <input type="text" id="assignmentNo" placeholder="e.g. 01" />
+            </div>
+            <div class="form-group">
+              <label for="courseCode">Course Code <span style="color:#c0392b">*</span></label>
+              <input type="text" id="courseCode" placeholder="e.g. STA 321" required />
+              <span class="error-msg">Course code is required</span>
+            </div>
+            <div class="form-group full">
+              <label for="courseTitle">Course Title <span style="color:#c0392b">*</span></label>
+              <input type="text" id="courseTitle" placeholder="e.g. Multivariate Analysis" required />
+              <span class="error-msg">Course title is required</span>
+            </div>
+            <div class="form-group">
+              <label for="submissionDate">Submission Date <span style="color:#c0392b">*</span></label>
+              <input type="date" id="submissionDate" required />
+              <span class="error-msg">Submission date is required</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Course Teacher Information -->
+      <div class="card form-section">
+        <div class="card-header">👨‍🏫 Course Teacher Information</div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="teacherName">Teacher's Name <span style="color:#c0392b">*</span></label>
+              <input type="text" id="teacherName" placeholder="e.g. Dr. Mohammad Ali" required />
+              <span class="error-msg">Teacher's name is required</span>
+            </div>
+            <div class="form-group">
+              <label for="designation">Designation <span style="color:#c0392b">*</span></label>
+              <input type="text" id="designation" placeholder="e.g. Associate Professor" required />
+              <span class="error-msg">Designation is required</span>
+            </div>
+            <div class="form-group">
+              <label for="teacherDept">Department <span style="color:#c0392b">*</span></label>
+              <input type="text" id="teacherDept" placeholder="e.g. Statistics" required />
+              <span class="error-msg">Teacher's department is required</span>
+            </div>
+            <div class="form-group full">
+              <label for="faculty">Faculty / School <span class="optional">(optional)</span></label>
+              <input type="text" id="faculty" placeholder="e.g. School of Physical Sciences" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Information -->
+      <div class="card form-section">
+        <div class="card-header">➕ Additional Information</div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="groupMembers">Group Members <span class="optional">(optional)</span></label>
+              <textarea id="groupMembers" rows="2" placeholder="e.g. Md. Salek Miah, Fatema Begum, ..."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="groupNo">Group Number <span class="optional">(optional)</span></label>
+              <input type="text" id="groupNo" placeholder="e.g. Group-A" />
+            </div>
+            <div class="form-group">
+              <label for="remarks">Remarks <span class="optional">(optional)</span></label>
+              <input type="text" id="remarks" placeholder="Any additional note" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-danger" id="resetBtn">↺ Reset All Fields</button>
+        <button type="button" class="btn btn-secondary" id="scrollPreviewBtn">👁 View Preview</button>
+      </div>
+    </div>
+
+    <!-- Right: Live Preview -->
+    <div class="preview-panel">
+      <div class="preview-actions">
+        <button type="button" class="btn btn-primary" id="downloadBtn">
+          <span class="spinner"></span>
+          <span class="btn-text">📥 Download Cover Page (PDF)</span>
+        </button>
+        <button type="button" class="btn btn-secondary" id="printBtn">🖨 Print Cover Page</button>
+      </div>
+
+      <div class="preview-wrapper">
+        <div id="coverPage">
+          <img src="https://upload.wikimedia.org/wikipedia/bn/e/e0/%E0%A6%B6%E0%A6%BE%E0%A6%B9%E0%A6%9C%E0%A6%BE%E0%A6%B2%E0%A6%BE%E0%A6%B2_%E0%A6%AC%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%BE%E0%A6%A8_%E0%A6%93_%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%AF%E0%A7%81%E0%A6%95%E0%A7%8D%E0%A6%A4%E0%A6%BF_%E0%A6%AC%E0%A6%BF%E0%A6%B6%E0%A7%8D%E0%A6%AC%E0%A6%AC%E0%A6%BF%E0%A6%A6%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%B2%E0%A6%AF%E0%A6%BC%E0%A7%87%E0%A6%B0_%E0%A6%B2%E0%A7%8B%E0%A6%97%E0%A7%8B.png" alt="SUST Logo" class="cover-logo" id="coverLogo" crossorigin="anonymous" />
+          <div class="cover-uni-name">Shahjalal University of Science and Technology</div>
+          <div class="cover-uni-loc">Sylhet-3114, Bangladesh</div>
+          <hr class="cover-divider" />
+
+          <div class="cover-title">Assignment Cover Page</div>
+          <div class="cover-assignment-title" id="pvAssignmentTitle">[Assignment Title]</div>
+          <div class="cover-meta" id="pvAssignmentNo" style="display:none;"></div>
+          <div class="cover-meta" id="pvCourseInfo">Course: [Course Code] — [Course Title]</div>
+          <div class="cover-meta" id="pvSubmissionDate">Submission Date: [Date]</div>
+
+          <div class="cover-section">
+            <div class="cover-section-title">Student Information</div>
+            <table class="cover-info-table">
+              <tr><td class="label">Name</td><td class="colon">:</td><td id="pvStudentName">—</td></tr>
+              <tr><td class="label">ID / Reg. No.</td><td class="colon">:</td><td id="pvStudentId">—</td></tr>
+              <tr><td class="label">Department</td><td class="colon">:</td><td id="pvDepartment">—</td></tr>
+              <tr><td class="label">Degree / Program</td><td class="colon">:</td><td id="pvDegree">—</td></tr>
+              <tr><td class="label">Academic Year</td><td class="colon">:</td><td id="pvAcademicYear">—</td></tr>
+              <tr><td class="label">Term / Semester</td><td class="colon">:</td><td id="pvTerm">—</td></tr>
+              <tr><td class="label">Session</td><td class="colon">:</td><td id="pvSession">—</td></tr>
+              <tr id="pvBatchRow" style="display:none;"><td class="label">Batch</td><td class="colon">:</td><td id="pvBatch">—</td></tr>
+            </table>
+          </div>
+
+          <div class="cover-submitted">
+            <div>
+              <h4>Submitted To</h4>
+              <p id="pvTeacherName">—</p>
+              <p id="pvDesignation">—</p>
+              <p id="pvTeacherDept">—</p>
+              <p id="pvFaculty" style="display:none;"></p>
+            </div>
+            <div>
+              <h4>Submitted By</h4>
+              <p id="pvByName">—</p>
+              <p id="pvById">—</p>
+              <p id="pvByDept">—</p>
+              <p id="pvGroupNo" style="display:none;"></p>
+            </div>
+          </div>
+
+          <div id="pvGroupMembersSection" style="display:none; margin-top:12px; font-size:11.5px;">
+            <strong>Group Members:</strong>
+            <p id="pvGroupMembers" style="margin-top:2px;"></p>
+          </div>
+
+          <div id="pvRemarksSection" style="display:none; margin-top:8px; font-size:11.5px;">
+            <strong>Remarks:</strong> <span id="pvRemarks"></span>
+          </div>
+
+          <div class="cover-footer-note">
+            Shahjalal University of Science and Technology · Sylhet, Bangladesh
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <h3>Developed & Maintained By</h3>
+    <p><strong>Md Salek Miah</strong></p>
+    <p>B.Sc. (Honours) in Statistics</p>
+    <p>Shahjalal University of Science and Technology (SUST)</p>
+    <p>Sylhet, Bangladesh</p>
+    <div class="footer-divider"></div>
+    <p>Email: <a href="mailto:saleksta@gmail.com">saleksta@gmail.com</a></p>
+    <p style="margin-top:1rem; font-size:0.75rem; opacity:0.7;">© 2024–2026 SUST Cover Maker · Free tool for SUST students</p>
+  </footer>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ========== DOM Elements ==========
+    const fields = {
+      studentName: document.getElementById('studentName'),
+      studentId: document.getElementById('studentId'),
+      department: document.getElementById('department'),
+      degree: document.getElementById('degree'),
+      academicYear: document.getElementById('academicYear'),
+      term: document.getElementById('term'),
+      session: document.getElementById('session'),
+      batch: document.getElementById('batch'),
+      assignmentTitle: document.getElementById('assignmentTitle'),
+      assignmentNo: document.getElementById('assignmentNo'),
+      courseCode: document.getElementById('courseCode'),
+      courseTitle: document.getElementById('courseTitle'),
+      submissionDate: document.getElementById('submissionDate'),
+      teacherName: document.getElementById('teacherName'),
+      designation: document.getElementById('designation'),
+      teacherDept: document.getElementById('teacherDept'),
+      faculty: document.getElementById('faculty'),
+      groupMembers: document.getElementById('groupMembers'),
+      groupNo: document.getElementById('groupNo'),
+      remarks: document.getElementById('remarks')
+    };
+
+    const requiredFields = [
+      'studentName', 'studentId', 'department', 'degree',
+      'academicYear', 'term', 'session',
+      'assignmentTitle', 'courseCode', 'courseTitle', 'submissionDate',
+      'teacherName', 'designation', 'teacherDept'
+    ];
+
+    // ========== Live Preview Update ==========
+    function updatePreview() {
+      // Assignment
+      const title = fields.assignmentTitle.value.trim() || '[Assignment Title]';
+      document.getElementById('pvAssignmentTitle').textContent = title;
+
+      const aNo = fields.assignmentNo.value.trim();
+      const aNoEl = document.getElementById('pvAssignmentNo');
+      if (aNo) {
+        aNoEl.style.display = 'block';
+        aNoEl.textContent = 'Assignment No. ' + aNo;
+      } else {
+        aNoEl.style.display = 'none';
+      }
+
+      const code = fields.courseCode.value.trim() || '[Course Code]';
+      const cTitle = fields.courseTitle.value.trim() || '[Course Title]';
+      document.getElementById('pvCourseInfo').textContent = 'Course: ' + code + ' — ' + cTitle;
+
+      const dateVal = fields.submissionDate.value;
+      let dateStr = '[Date]';
+      if (dateVal) {
+        const d = new Date(dateVal + 'T00:00:00');
+        dateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+      }
+      document.getElementById('pvSubmissionDate').textContent = 'Submission Date: ' + dateStr;
+
+      // Student
+      document.getElementById('pvStudentName').textContent = fields.studentName.value.trim() || '—';
+      document.getElementById('pvStudentId').textContent = fields.studentId.value.trim() || '—';
+      document.getElementById('pvDepartment').textContent = fields.department.value.trim() || '—';
+      document.getElementById('pvDegree').textContent = fields.degree.value.trim() || '—';
+      document.getElementById('pvAcademicYear').textContent = fields.academicYear.value.trim() || '—';
+      document.getElementById('pvTerm').textContent = fields.term.value.trim() || '—';
+      document.getElementById('pvSession').textContent = fields.session.value.trim() || '—';
+
+      const batch = fields.batch.value.trim();
+      const batchRow = document.getElementById('pvBatchRow');
+      if (batch) {
+        batchRow.style.display = 'table-row';
+        document.getElementById('pvBatch').textContent = batch;
+      } else {
+        batchRow.style.display = 'none';
+      }
+
+      // Submitted To
+      document.getElementById('pvTeacherName').textContent = fields.teacherName.value.trim() || '—';
+      document.getElementById('pvDesignation').textContent = fields.designation.value.trim() || '—';
+      document.getElementById('pvTeacherDept').textContent = (fields.teacherDept.value.trim() ? 'Department of ' + fields.teacherDept.value.trim() : '—');
+
+      const faculty = fields.faculty.value.trim();
+      const facEl = document.getElementById('pvFaculty');
+      if (faculty) {
+        facEl.style.display = 'block';
+        facEl.textContent = faculty;
+      } else {
+        facEl.style.display = 'none';
+      }
+
+      // Submitted By
+      document.getElementById('pvByName').textContent = fields.studentName.value.trim() || '—';
+      document.getElementById('pvById').textContent = fields.studentId.value.trim() ? 'ID: ' + fields.studentId.value.trim() : '—';
+      document.getElementById('pvByDept').textContent = fields.department.value.trim() ? 'Department of ' + fields.department.value.trim() : '—';
+
+      const gNo = fields.groupNo.value.trim();
+      const gNoEl = document.getElementById('pvGroupNo');
+      if (gNo) {
+        gNoEl.style.display = 'block';
+        gNoEl.textContent = 'Group: ' + gNo;
+      } else {
+        gNoEl.style.display = 'none';
+      }
+
+      // Group Members
+      const members = fields.groupMembers.value.trim();
+      const memSec = document.getElementById('pvGroupMembersSection');
+      if (members) {
+        memSec.style.display = 'block';
+        document.getElementById('pvGroupMembers').textContent = members;
+      } else {
+        memSec.style.display = 'none';
+      }
+
+      // Remarks
+      const remarks = fields.remarks.value.trim();
+      const remSec = document.getElementById('pvRemarksSection');
+      if (remarks) {
+        remSec.style.display = 'block';
+        document.getElementById('pvRemarks').textContent = remarks;
+      } else {
+        remSec.style.display = 'none';
+      }
+    }
+
+    // Attach live listeners
+    Object.values(fields).forEach(el => {
+      el.addEventListener('input', updatePreview);
+      el.addEventListener('change', updatePreview);
+    });
+
+    // Set default date to today
+    const today = new Date().toISOString().split('T')[0];
+    fields.submissionDate.value = today;
+    updatePreview();
+
+    // ========== Validation ==========
+    function validate() {
+      let valid = true;
+      requiredFields.forEach(key => {
+        const el = fields[key];
+        const group = el.closest('.form-group');
+        if (!el.value.trim()) {
+          group.classList.add('has-error');
+          el.classList.add('error');
+          valid = false;
+        } else {
+          group.classList.remove('has-error');
+          el.classList.remove('error');
+        }
+      });
+      return valid;
+    }
+
+    // Clear error on input
+    requiredFields.forEach(key => {
+      fields[key].addEventListener('input', function () {
+        if (this.value.trim()) {
+          this.classList.remove('error');
+          this.closest('.form-group').classList.remove('has-error');
+        }
+      });
+    });
+
+    // ========== Toast ==========
+    function showToast(msg, duration = 3000) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), duration);
+    }
+
+    // ========== Reset ==========
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      if (confirm('Are you sure you want to reset all fields? This cannot be undone.')) {
+        Object.values(fields).forEach(el => {
+          if (el.type === 'date') el.value = today;
+          else el.value = '';
+          el.classList.remove('error');
+          el.closest('.form-group')?.classList.remove('has-error');
+        });
+        updatePreview();
+        showToast('All fields have been reset.');
+      }
+    });
+
+    // ========== Scroll to Preview ==========
+    document.getElementById('scrollPreviewBtn').addEventListener('click', () => {
+      document.querySelector('.preview-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    // ========== PDF Download ==========
+    document.getElementById('downloadBtn').addEventListener('click', async () => {
+      if (!validate()) {
+        showToast('Please fill in all required fields (*) before downloading.');
+        // Scroll to first error
+        const firstError = document.querySelector('.form-group.has-error');
+        if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      const btn = document.getElementById('downloadBtn');
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      try {
+        const cover = document.getElementById('coverPage');
+
+        // Temporarily enlarge for better quality capture
+        const originalStyle = cover.style.cssText;
+        cover.style.width = '794px';   // ~A4 at 96dpi
+        cover.style.maxWidth = '794px';
+        cover.style.height = '1123px';
+        cover.style.aspectRatio = 'auto';
+        cover.style.padding = '48px 56px';
+
+        // Scale fonts slightly for print quality
+        const allText = cover.querySelectorAll('*');
+        const fontBackup = [];
+        allText.forEach(el => {
+          fontBackup.push(el.style.fontSize);
+        });
+
+        await new Promise(r => setTimeout(r, 100)); // allow reflow
+
+        const canvas = await html2canvas(cover, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+          width: 794,
+          height: 1123
+        });
+
+        // Restore
+        cover.style.cssText = originalStyle;
+
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4'
+        });
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        const pdfWidth = 210;
+        const pdfHeight = 297;
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+
+        const fileName = 'SUST_Assignment_Cover_' +
+          (fields.studentId.value.trim() || 'Cover') + '_' +
+          (fields.courseCode.value.trim().replace(/\s+/g, '') || 'Assignment') + '.pdf';
+
+        pdf.save(fileName);
+        showToast('PDF downloaded successfully!');
+      } catch (err) {
+        console.error(err);
+        showToast('Error generating PDF. Please try again or use Print.');
+      } finally {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      }
+    });
+
+    // ========== Print ==========
+    document.getElementById('printBtn').addEventListener('click', () => {
+      if (!validate()) {
+        showToast('Please fill in all required fields (*) before printing.');
+        return;
+      }
+      window.print();
+    });
+
+    // Preload logo for canvas
+    const logoImg = new Image();
+    logoImg.crossOrigin = 'anonymous';
+    logoImg.src = document.getElementById('coverLogo').src;
+  </script>
+</body>
+</html>
