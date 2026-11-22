@@ -134,6 +134,8 @@ dialog .dlg-actions{display:flex;gap:10px;justify-content:flex-end}
   .hdr-uni{display:none}
 }
 @media (max-width:480px){
+  .seg:not(.small){width:100%}
+  .seg:not(.small) button{flex:1;padding:8px 6px;font-size:12px}
   .grid{grid-template-columns:1fr}
   .actions{grid-template-columns:1fr}
   .header-inner{padding:10px 14px}
@@ -227,6 +229,49 @@ dialog .dlg-actions{display:flex;gap:10px;justify-content:flex-end}
 .cvB .bottom .grp ul.members{display:inline-block;text-align:right}
 .cvB .bottom .rem{font-style:italic;color:#5b6b68;margin-top:3px}
 
+/* ---- Template C: Group Assignment ---- */
+.cvC .frame{position:absolute;inset:24px;border:1.5px solid #16B8A6}
+.cvC .band{position:absolute;top:24px;left:24px;right:24px;height:9px;background:#087F73}
+.cvC .band:after{content:"";position:absolute;left:50%;margin-left:-45px;top:0;width:90px;height:9px;background:#16B8A6}
+.cvC .inner{padding:56px 62px 44px}
+.cvC .head{text-align:center}
+.cvC .head .c-logo{margin:0 auto;height:92px;max-width:130px}
+.cvC .head .c-logo-ph{width:88px;height:88px;margin:0 auto}
+.cvC .uni{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;font-size:25px;line-height:1.15;letter-spacing:.5px;text-transform:uppercase;color:#087F73;margin-top:10px}
+.cvC .loc{font-size:11.5px;letter-spacing:3px;text-transform:uppercase;color:#5b6b68;margin-top:4px}
+.cvC .dept{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;font-size:19px;color:#173F35;margin-top:10px;line-height:1.2}
+.cvC .deg{font-size:12.5px;margin-top:2px}
+.cvC .rule{height:1px;background:#DCE8E5;margin:16px 0 0;position:relative}
+.cvC .rule:after{content:"";position:absolute;left:50%;margin-left:-30px;top:-1px;width:60px;height:3px;background:#16B8A6}
+.cvC .main{text-align:center;padding:18px 0 8px}
+.cvC .kicker{font-weight:700;font-size:12px;letter-spacing:5px;text-transform:uppercase;color:#087F73}
+.cvC .atitle{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;color:#173F35;line-height:1.2;margin-top:10px}
+.cvC .course{margin-top:12px;font-size:13.5px;line-height:1.5}
+.cvC .course b{font-weight:600;color:#087F73}
+.cvC .course .sepd{display:inline-block;width:5px;height:5px;background:#16B8A6;transform:rotate(45deg);margin:0 12px 2px}
+.cvC .sec{margin-top:12px}
+.cvC .sec h4{margin:0 0 9px;padding-bottom:6px;font-size:11px;letter-spacing:2.6px;text-transform:uppercase;color:#087F73;font-weight:700;border-bottom:1px solid #DCE8E5;position:relative}
+.cvC .sec h4:after{content:"";position:absolute;left:0;bottom:-1.5px;width:38px;height:2px;background:#16B8A6}
+.cvC .sup-grid{display:grid;gap:14px}
+.cvC .sup-grid.n1{grid-template-columns:1fr}
+.cvC .sup-grid.n2{grid-template-columns:1fr 1fr}
+.cvC .sup{border:1px solid #DCE8E5;border-left:3px solid #16B8A6;padding:9px 14px;min-width:0}
+.cvC .sup .r{display:block;font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;color:#6b7c78}
+.cvC .sup .nm{display:block;font-weight:700;font-size:14px;color:#173F35;line-height:1.3;margin-top:1px}
+.cvC .sup .dp{display:block;font-size:12.5px;color:#263238;line-height:1.35}
+.cvC .gmeta{display:flex;flex-wrap:wrap;gap:5px 12px;align-items:center;font-size:12px;color:#263238;margin-bottom:9px}
+.cvC .gmeta .g{font-weight:700;color:#087F73;border:1px solid #16B8A6;padding:1px 9px;letter-spacing:1px}
+table.gt{width:100%;border-collapse:collapse;font-size:12.5px}
+table.gt th{background:#F4F8F7;color:#087F73;font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;text-align:left;padding:7px 10px;border:1px solid #DCE8E5;font-weight:700}
+table.gt td{border:1px solid #DCE8E5;padding:var(--rp,7px) 10px;color:#263238;font-weight:600;line-height:1.3}
+table.gt .n{width:46px;text-align:center}
+table.gt .idc{width:150px}
+.cvC .bottom{margin-top:auto;padding-top:12px;border-top:1px solid #DCE8E5;text-align:center;font-size:12.5px}
+.cvC .bottom .dt b{color:#087F73}
+.cvC .bottom .rem{margin-top:5px;font-size:12px;font-style:italic;color:#5b6b68}
+.cvC .bottom .foot{margin-top:9px;font-size:9.5px;letter-spacing:2.6px;text-transform:uppercase;color:#8fa39f}
+.cvC .gap{height:16px;flex:none}
+
 /* ---------- Print ---------- */
 #printArea{display:none}
 @page{size:A4;margin:0}
@@ -301,6 +346,7 @@ dialog .dlg-actions{display:flex;gap:10px;justify-content:flex-end}
       <div class="seg" role="group" aria-label="Template">
         <button type="button" data-tpl="A" aria-pressed="true">Classic Academic</button>
         <button type="button" data-tpl="B" aria-pressed="false">Modern Minimal</button>
+        <button type="button" data-tpl="C" aria-pressed="false">Group Assignment</button>
       </div>
       <div class="seg small" role="group" aria-label="Zoom">
         <button type="button" data-zoom="fit" aria-pressed="true">Fit</button>
@@ -431,21 +477,22 @@ var SECTIONS = [
     {id:"session", label:"Academic Session", ph:"e.g. 2021-22", req:1, span:2}
   ]},
   {title:"Assignment Information", fields:[
-    {id:"assignmentTitle", label:"Assignment Title", ph:"e.g. Regression Analysis of Housing Prices", req:1, span:2},
+    {id:"assignmentTitle", label:"Assignment Title", ph:"e.g. Types of Biostatistics and Epidemiology", req:1, span:2},
     {id:"assignmentNo", label:"Assignment Number", ph:"e.g. 01", opt:1},
     {id:"courseCode", label:"Course Code", ph:"e.g. STA 301", req:1},
-    {id:"courseTitle", label:"Course Title", ph:"e.g. Regression Analysis", req:1, span:2},
+    {id:"courseTitle", label:"Course Title", ph:"e.g. Biostatistics and Epidemiology", req:1, span:2},
     {id:"submissionDate", label:"Submission Date", type:"date", req:1, span:2}
   ]},
   {title:"Course Teacher", fields:[
-    {id:"teacherName", label:"Teacher's Name", ph:"Teacher's full name", req:1, span:2},
-    {id:"designation", label:"Designation", ph:"e.g. Professor", req:1, list:"dl-desig", span:2},
+    {id:"teacherName", label:"Teacher's Name & Designation", ph:"e.g. Professor Dr. Full Name", req:1, span:2, hint:"Write the designation before the name, e.g. Professor Dr. Jamal Uddin."},
     {id:"teacherDept", label:"Department", ph:"Defaults to your department if left blank", opt:1, list:"dl-dept", span:2},
-    {id:"faculty", label:"Faculty", ph:"e.g. Faculty / School name", opt:1, span:2}
+    {id:"faculty", label:"Faculty", ph:"e.g. Faculty / School name", opt:1, span:2},
+    {id:"supervisor2", label:"Additional Supervisor", ph:"e.g. Associate Professor Dr. Full Name", opt:1, span:2, hint:"Shown only in the Group Assignment template. Leave empty for a single supervisor."},
+    {id:"supervisor2Dept", label:"Additional Supervisor's Department", ph:"Defaults to the teacher's department", opt:1, list:"dl-dept", span:2}
   ]},
   {title:"Additional Information", fields:[
     {id:"groupNo", label:"Group Number", ph:"e.g. 05", opt:1, span:2},
-    {id:"members", label:"Group Members", ph:"One per line: Name — ID", opt:1, type:"textarea", span:2},
+    {id:"members", label:"Group Members", ph:"One per line: Name — ID (include yourself). Used as a table in the Group Assignment template.", opt:1, type:"textarea", span:2},
     {id:"remarks", label:"Remarks", ph:"Any note for the cover page", opt:1, type:"textarea", span:2}
   ]}
 ];
@@ -463,15 +510,15 @@ var DEFAULTS = {
   year:"4th Year",
   semester:"1st Semester",
   session:"2021-22",
-  teacherName:"Dr. Jamal Uddin",
-  designation:"Professor",
+  assignmentTitle:"Types of Biostatistics and Epidemiology",
+  teacherName:"Professor Dr. Jamal Uddin",
   teacherDept:"Statistics"
 };
 function applyDefaults(){
   ALL_IDS.forEach(function(id){ $(id).value = DEFAULTS[id] || ""; });
 }
 
-var STORE_KEY = "sustCoverMaker.v2";
+var STORE_KEY = "sustCoverMaker.v3";
 var LOGO_KEY = "sustCoverMaker.logo";
 var TPL_KEY = "sustCoverMaker.tpl";
 
@@ -501,7 +548,7 @@ function buildForm(){
       html += '<div class="'+cls+'" data-field="'+f.id+'">'+
         '<label for="'+f.id+'"><span>'+esc(f.label)+(f.req?' <span class="req">*</span>':'')+'</span>'+(f.opt?'<span class="opt">Optional</span>':'')+'</label>'+
         '<'+tag+attrs+(tag==="textarea"?'></textarea>':'>')+
-        '<div class="err">This field is required.</div></div>';
+        '<div class="err">This field is required.</div>'+(f.hint?'<div class="hint">'+esc(f.hint)+'</div>':'')+'</div>';
     });
     html += '</div></div>';
   });
@@ -548,6 +595,12 @@ function membersHTML(text){
   return '<ul class="members" style="column-count:'+cols+';font-size:'+fs+'px">'+
     lines.map(function(l){return '<li>'+esc(l)+'</li>';}).join("")+'</ul>';
 }
+function parseMembers(text){
+  return text.split(/\r?\n/).map(function(x){return x.trim();}).filter(Boolean).map(function(l){
+    var m = /^(.*?)\s*(?:—|–|\||\t|,|\s-\s)\s*(.+)$/.exec(l);
+    return m ? {name:m[1].trim(), id:m[2].trim()} : {name:l, id:""};
+  });
+}
 function logoHTML(forExport){
   if(state.logo) return '<img class="c-logo" src="'+state.logo+'" alt="SUST logo">';
   return forExport ? "" : '<div class="c-logo-ph">SUST<br>logo</div>';
@@ -564,7 +617,6 @@ function coverHTML(d, tpl, forExport){
 
   var toRows = [
     ["Name", val(d.teacherName,"Teacher's name")],
-    ["Designation", val(d.designation,"Designation")],
     ["Department", tDept ? esc(tDept) : '<span class="ph">Department</span>']
   ];
   if(d.faculty) toRows.push(["Faculty", esc(d.faculty)]);
@@ -612,6 +664,61 @@ function coverHTML(d, tpl, forExport){
         '<div class="bottom">'+
           '<div class="dt"><b>Date of Submission:</b> '+(date?esc(date):'<span class="ph">Submission date</span>')+'</div>'+
           (hasGroup?'<div class="grp">'+groupLine+members+'</div>':'')+
+          remarks+
+          '<div class="foot">Shahjalal University of Science and Technology</div>'+
+        '</div>'+
+      '</div></div>';
+  }
+
+  if(tpl==="C"){
+    var mem = parseMembers(d.members);
+    var memPlaceholder = false;
+    if(!mem.length){ mem = [{name:d.studentName, id:d.studentId}]; memPlaceholder = true; }
+    var rp = mem.length>12 ? 2 : mem.length>9 ? 4 : mem.length>6 ? 5 : 7;
+    var gfs = mem.length>12 ? 11.5 : 12.5;
+    var trs = mem.map(function(m,i){
+      return '<tr><td class="n">'+(i+1)+'</td><td>'+val(m.name,"Student name")+'</td><td class="idc">'+(m.id?esc(m.id):(memPlaceholder?'<span class="ph">Student ID</span>':''))+'</td></tr>';
+    }).join("");
+    var metaBits = [];
+    if(d.groupNo) metaBits.push('<span class="g">Group No. '+esc(d.groupNo)+'</span>');
+    if(dept) metaBits.push('<span>'+esc(dept)+'</span>');
+    var ys = [d.year, d.semester].filter(Boolean).join(", ");
+    if(ys) metaBits.push('<span>'+esc(ys)+'</span>');
+    if(d.session) metaBits.push('<span>Session: '+esc(d.session)+'</span>');
+    if(d.batch) metaBits.push('<span>Batch: '+esc(d.batch)+'</span>');
+    var sups = [{role:"Supervisor", name:d.teacherName, ph:"Teacher's name", dept:tDept, fac:d.faculty}];
+    if(d.supervisor2){
+      sups[0].role = "Supervisor";
+      sups.push({role:"Additional Supervisor", name:d.supervisor2, dept:deptLabel(d.supervisor2Dept || d.teacherDept || d.department), fac:""});
+    }
+    var supHTML = sups.map(function(s){
+      return '<div class="sup"><span class="r">'+s.role+'</span><span class="nm">'+val(s.name, s.ph||"Supervisor")+'</span>'+
+        (s.dept?'<span class="dp">'+esc(s.dept)+'</span>':'')+
+        (s.fac?'<span class="dp">'+esc(s.fac)+'</span>':'')+'</div>';
+    }).join("");
+    return '<div class="cv cvC">'+
+      '<div class="frame"></div><div class="band"></div>'+
+      '<div class="inner">'+
+        '<div class="head">'+logoHTML(forExport)+
+          '<div class="uni">Shahjalal University of<br>Science and Technology</div>'+
+          '<div class="loc">Sylhet, Bangladesh</div>'+
+          '<div class="dept">'+(dept?esc(dept):'<span class="ph">Department</span>')+'</div>'+
+          (d.degree?'<div class="deg">'+esc(d.degree)+'</div>':'')+
+        '</div>'+
+        '<div class="rule"></div>'+
+        '<div class="main">'+
+          '<div class="kicker">Group '+assignHead+'</div>'+
+          '<div class="atitle" style="font-size:'+tSize+'px">'+(d.assignmentTitle?esc(d.assignmentTitle):'<span class="ph">Assignment Title</span>')+'</div>'+
+          '<div class="course"><b>Course Title:</b> '+val(d.courseTitle,"Course title")+'<span class="sepd"></span><b>Course Code:</b> '+val(d.courseCode,"Course code")+'</div>'+
+        '</div>'+
+        '<div class="sec"><h4>Submitted To</h4><div class="sup-grid n'+sups.length+'">'+supHTML+'</div></div>'+
+        '<div class="sec"><h4>Submitted By</h4>'+
+          (metaBits.length?'<div class="gmeta">'+metaBits.join("")+'</div>':'')+
+          '<table class="gt" style="--rp:'+rp+'px;font-size:'+gfs+'px"><thead><tr><th class="n">SL</th><th>Name</th><th class="idc">Student ID</th></tr></thead><tbody>'+trs+'</tbody></table>'+
+        '</div>'+
+        '<div class="gap"></div>'+
+        '<div class="bottom">'+
+          '<div class="dt"><b>Date of Submission:</b> '+(date?esc(date):'<span class="ph">Submission date</span>')+'</div>'+
           remarks+
           '<div class="foot">Shahjalal University of Science and Technology</div>'+
         '</div>'+
@@ -680,7 +787,7 @@ function restore(){
     }catch(e){}
   }
   var t = safeGet(TPL_KEY);
-  if(t==="A"||t==="B") state.tpl = t;
+  if(t==="A"||t==="B"||t==="C") state.tpl = t;
 }
 
 /* ---------- Toast ---------- */
