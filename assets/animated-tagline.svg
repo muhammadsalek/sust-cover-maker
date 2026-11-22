@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="84" viewBox="0 0 1100 84">
+<rect width="1100" height="84" rx="18" fill="#0A2534"/>
+<rect x="14" y="14" width="6" height="56" rx="3" fill="#15C4B1"/>
+<text x="42" y="52" font-family="Arial,sans-serif" font-weight="700" font-size="29" fill="#E8FEFC">Build once. Design beautifully. Submit confidently.</text>
+<rect x="978" y="30" width="4" height="29" fill="#43E1CB"><animate attributeName="opacity" values="1;0;1" dur="1.1s" repeatCount="indefinite"/></rect>
+<circle cx="1033" cy="42" r="6" fill="#19B6A5"><animate attributeName="opacity" values="0.2;1;0.2" dur="2s" repeatCount="indefinite"/></circle>
+<circle cx="1056" cy="42" r="6" fill="#19B6A5"><animate attributeName="opacity" values="0.2;1;0.2" dur="2s" begin=".4s" repeatCount="indefinite"/></circle>
+<circle cx="1079" cy="42" r="6" fill="#19B6A5"><animate attributeName="opacity" values="0.2;1;0.2" dur="2s" begin=".8s" repeatCount="indefinite"/></circle>
+</svg>
