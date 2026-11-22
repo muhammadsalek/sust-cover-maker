@@ -100,6 +100,15 @@ details.help li{margin-bottom:3px}
 .mount{transform-origin:top left;width:793px;height:1122px;box-shadow:0 4px 18px rgba(23,63,53,.18)}
 .preview-note{font-size:12px;color:var(--muted);margin:8px 2px 0}
 
+/* ---------- Group member rows ---------- */
+.mem-head,.mem-row{display:grid;grid-template-columns:22px minmax(0,1fr) minmax(0,140px) 30px;gap:6px;align-items:center}
+.mem-head{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:4px}
+.mem-row{margin-bottom:6px}
+.mem-row .mn{font-size:12px;color:var(--muted);text-align:center}
+.mem-del{appearance:none;border:1px solid var(--border);background:#fff;color:var(--muted);border-radius:4px;width:30px;height:34px;font-size:18px;line-height:1;cursor:pointer}
+.mem-del:hover{border-color:var(--danger);color:var(--danger)}
+@media (max-width:480px){.mem-head,.mem-row{grid-template-columns:20px minmax(0,1fr) minmax(0,110px) 30px}}
+
 /* ---------- Footer ---------- */
 .site-footer{background:var(--green);color:#cfe9e5;margin-top:10px;border-top:3px solid var(--firoza)}
 .footer-inner{max-width:900px;margin:0 auto;padding:28px 20px;font-size:13px;line-height:1.6}
@@ -515,7 +524,7 @@ var SECTIONS = [
   ]},
   {title:"Additional Information", fields:[
     {id:"groupNo", label:"Group Number", ph:"e.g. 05", opt:1, span:2},
-    {id:"members", label:"Group Members", ph:"One per line: Name — ID (include yourself). Used as a table in the Group Assignment template.", opt:1, type:"textarea", span:2},
+    {id:"members", label:"Group Members", opt:1, type:"memberlist", span:2},
     {id:"remarks", label:"Remarks", ph:"Any note for the cover page", opt:1, type:"textarea", span:2}
   ]}
 ];
@@ -557,12 +566,55 @@ function safeGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null
 function safeSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } }
 function safeDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
 
+/* ---------- Group members (Name + Student ID rows) ---------- */
+function memberFieldHTML(f){
+  return '<div class="field span2" data-field="members">'+
+    '<label><span>'+esc(f.label)+'</span><span class="opt">Optional</span></label>'+
+    '<div class="mem-head"><span>#</span><span>Name</span><span>Student ID</span><span></span></div>'+
+    '<div id="memRows"></div>'+
+    '<button type="button" class="btn btn-secondary btn-sm" id="memAdd" style="align-self:flex-start;margin-top:8px">+ Add member</button>'+
+    '<textarea id="members" hidden></textarea>'+
+    '<div class="hint">Type each member\'s name and student ID (include yourself). Shown as a table in the Group Assignment template.</div>'+
+    '</div>';
+}
+function memRowHTML(i, m){
+  return '<div class="mem-row"><span class="mn">'+(i+1)+'</span>'+
+    '<input type="text" class="mem-name" placeholder="Full name" value="'+esc(m.name)+'" aria-label="Member name">'+
+    '<input type="text" class="mem-id" placeholder="Student ID" value="'+esc(m.id)+'" aria-label="Member student ID">'+
+    '<button type="button" class="mem-del" aria-label="Remove member" title="Remove">&times;</button></div>';
+}
+function renderMemberRows(list){
+  list = list.slice();
+  while(list.length < 2) list.push({name:"", id:""});
+  $("memRows").innerHTML = list.map(function(m,i){ return memRowHTML(i,m); }).join("");
+}
+function renumberMembers(){
+  Array.prototype.forEach.call($("memRows").querySelectorAll(".mn"), function(n,i){ n.textContent = i+1; });
+}
+function syncMembers(){
+  var lines = [];
+  Array.prototype.forEach.call($("memRows").querySelectorAll(".mem-row"), function(r){
+    var n = r.querySelector(".mem-name").value.replace(/[\t\r\n]+/g," ").trim();
+    var id = r.querySelector(".mem-id").value.replace(/[\t\r\n]+/g," ").trim();
+    if(n || id) lines.push(n+"\t"+id);
+  });
+  $("members").value = lines.join("\n");
+}
+function loadMembersFromValue(){
+  var list = ($("members").value || "").split("\n").filter(function(x){return x.trim();}).map(function(l){
+    var t = l.indexOf("\t");
+    return t>-1 ? {name:l.slice(0,t), id:l.slice(t+1)} : {name:l, id:""};
+  });
+  renderMemberRows(list);
+}
+
 /* ---------- Build form ---------- */
 function buildForm(){
   var html = "";
   SECTIONS.forEach(function(sec){
     html += '<div class="card"><h2>'+esc(sec.title)+'</h2><div class="grid">';
     sec.fields.forEach(function(f){
+      if(f.type==="memberlist"){ html += memberFieldHTML(f); return; }
       var cls = "field"+(f.span===2?" span2":"");
       var tag = f.type==="textarea" ? "textarea" : "input";
       var attrs = ' id="'+f.id+'" name="'+f.id+'"'+(f.ph?' placeholder="'+esc(f.ph)+'"':'');
@@ -611,7 +663,7 @@ function titleSize(len, tpl){
   return s[t];
 }
 function membersHTML(text){
-  var lines = text.split(/\r?\n/).map(function(x){return x.trim();}).filter(Boolean);
+  var lines = parseMembers(text).map(function(m){return [m.name,m.id].filter(Boolean).join(" — ");}).filter(Boolean);
   if(!lines.length) return "";
   var cols = lines.length>8 ? 3 : lines.length>3 ? 2 : 1;
   var fs = lines.length>12 ? 10.5 : lines.length>6 ? 11.5 : 12;
@@ -619,8 +671,11 @@ function membersHTML(text){
     lines.map(function(l){return '<li>'+esc(l)+'</li>';}).join("")+'</ul>';
 }
 function parseMembers(text){
-  return text.split(/\r?\n/).map(function(x){return x.trim();}).filter(Boolean).map(function(l){
-    var m = /^(.*?)\s*(?:—|–|\||\t|,|\s-\s)\s*(.+)$/.exec(l);
+  return text.split("\n").map(function(x){return x.replace(/\r$/,"");}).filter(function(x){return x.trim();}).map(function(l){
+    var t = l.indexOf("\t");
+    if(t>-1) return {name:l.slice(0,t).trim(), id:l.slice(t+1).trim()};
+    l = l.trim();
+    var m = /^(.*?)\s*(?:—|–|\||,|\s-\s)\s*(.+)$/.exec(l);
     return m ? {name:m[1].trim(), id:m[2].trim()} : {name:l, id:""};
   });
 }
@@ -990,6 +1045,7 @@ async function printCover(){
 /* ---------- Reset ---------- */
 function doReset(){
   applyDefaults();
+  loadMembersFromValue();
   document.querySelectorAll(".field.invalid").forEach(function(n){ n.classList.remove("invalid"); });
   safeDel(STORE_KEY);
   render();
@@ -1016,6 +1072,21 @@ function setZoom(z){
 function init(){
   buildForm();
   restore();
+  loadMembersFromValue();
+  $("memRows").addEventListener("input", syncMembers);
+  $("memRows").addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest(".mem-del") : null;
+    if(!b) return;
+    b.closest(".mem-row").remove();
+    if(!$("memRows").children.length) renderMemberRows([]);
+    renumberMembers(); syncMembers(); render(); save();
+  });
+  $("memAdd").addEventListener("click", function(){
+    var n = $("memRows").children.length;
+    $("memRows").insertAdjacentHTML("beforeend", memRowHTML(n, {name:"", id:""}));
+    var inp = $("memRows").lastElementChild.querySelector(".mem-name");
+    if(inp) inp.focus();
+  });
 
   $("coverForm").addEventListener("input", function(e){
     var wrap = e.target.closest && e.target.closest(".field");
