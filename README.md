@@ -1,86 +1,59 @@
-<div align="center">SUST Cover Maker
-A simple, professional way to create university assignment cover pages.
-A responsive, browser-based A4 assignment cover generator for students of Shahjalal University of Science and Technology (SUST), Sylhet, Bangladesh.
+<div align="center">
 
+<img src="assets/project-banner.png" alt="SUST Cover Maker project banner — developed by Md Salek Miah" width="100%" />
 
+<br />
 
+<img src="assets/animated-tagline.svg" alt="Build once. Design beautifully. Submit confidently." width="94%" />
 
+<br />
 
-Designed for academic clarity · Built for everyday student use
-</div>Overview
-SUST Cover Maker is a lightweight academic utility that lets students create a polished assignment cover page without wrestling with document formatting. Enter the relevant academic details, watch the A4 cover preview update instantly, then download a PDF or print it directly from the browser.
+[![HTML5](https://img.shields.io/badge/HTML5-standalone-E34F26?style=for-the-badge&logo=html5&logoColor=white)](#technology)
+[![CSS3](https://img.shields.io/badge/CSS3-responsive-1572B6?style=for-the-badge&logo=css3&logoColor=white)](#technology)
+[![JavaScript](https://img.shields.io/badge/JavaScript-vanilla-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](#technology)
+[![Vercel](https://img.shields.io/badge/Deployment-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/)
 
-The project emphasizes clean typography, consistent spacing, an accessible form, responsive layout, and client-side processing. It runs from one self-contained HTML application file with no application server, account registration, or build pipeline.
-Note: This is an independently developed student utility, not an official SUST website or university-administered service. Use the official university logo only as permitted by the university.
+**A modern, browser-based assignment cover generator for Shahjalal University of Science and Technology (SUST).**
 
-Features
-Capability	What it does
-Live A4 preview	Reflects form changes on the cover page as they are entered.
-Student details	Student name, ID, department, degree, academic year, term, session, and optional batch.
-Assignment details	Assignment title and number, course title/code, and submission date.
-Instructor details	Teacher's name, designation, department, and optional faculty.
-Group assignments	Optional group number, member list, and remarks.
-University logo	Lets users select the official logo for display in the header and generated cover.
-PDF export	Creates an A4 PDF in the browser using html2canvas and jsPDF.
-Print-friendly output	Dedicated print action and A4 print styles.
-Field validation	Highlights required information before printing or exporting.
-Reset controls	Clears the form after confirmation.
-Responsive interface	Adapts the input form and preview layout to desktop and smaller screens.
-No server-side form storage	Academic form details are handled in the browser rather than submitted to a backend.
+[**Explore the source**](https://github.com/muhammadsalek/sust-cover-maker) · [**Contact the developer**](mailto:saleksta@gmail.com)
 
-
-How to use
-1. Open the deployed website in a modern browser.
-2. Complete the Student Information, Assignment Information, and Course Teacher Information sections.
-3. Add any optional group information or remarks.
-4. Upload the official SUST logo. The application uses the uploaded image in the header and the cover. On supported browsers, it remembers the logo locally on that device.
-5. Check the Live Cover Page Preview for spelling, dates, and alignment.
-6. Select Download Cover Page (PDF), or choose Print Cover Page for a print/PDF workflow.
-Important: The current implementation requires the logo to be uploaded before PDF export or printing. It is not permanently bundled inside index.html.
-
-Technology stack
-- HTML5 — semantic structure and form controls
-- CSS3 — responsive layouts, academic styling, and print styles
-- Vanilla JavaScript — form interaction, preview rendering, validation, logo handling, and export actions
-- html2canvas 1.4.1 — browser-side cover rendering for PDF generation
-- jsPDF 2.5.2 — A4 PDF creation
-- localStorage — optional device-local storage of the uploaded logo
-No React, Node.js, database, server API, or build process is required. The two PDF-generation libraries load from a CDN, so PDF download requires an internet connection unless those dependencies are cached by the browser.
-Project structure
-sust-cover-maker/
-├── index.html     # Complete application: markup, styles, and JavaScript
-└── README.md      # Project documentation (this file)
-Run locally
-1. Download or clone the repository.
-2. Open index.html in a modern browser.
-3. Enter the assignment information and upload the university logo.
-There are no installation commands and no dependencies to install locally. An internet connection is needed to load the PDF libraries from their CDNs.
-Deployment
-Vercel with GitHub
-1. Push index.html to the root of a GitHub repository.
-2. In Vercel, choose Add New Project and import the repository.
-3. Select the Other framework preset and keep the root directory as ./.
-4. Deploy as a static site without a build step.
-5. Open the production domain shown in the Vercel dashboard.
-Future commits to the connected production branch can trigger automatic deployments.
-Netlify or GitHub Pages
-Because the site is static, it can also be deployed on Netlify or GitHub Pages. Keep index.html at the deployment root.
-Privacy and limitations
-- The application does not ask users to create accounts or send their form inputs to a project backend.
-- The uploaded university logo can be saved in browser localStorage on the current device; clearing browser storage may remove it.
-- PDF generation is performed client-side. Download quality and text rendering can vary by browser and font availability, especially for complex Bengali text. Always inspect the PDF before submission.
-- A stable internet connection is needed to retrieve CDN-hosted PDF dependencies on their first load.
-- The current application generates assignment cover pages; it is not a university submission or grading portal.
-Project goals
-This project was created to make routine academic document preparation more efficient while applying practical frontend-development principles: usable forms, live visual feedback, client-side document generation, mobile responsiveness, and straightforward static deployment.
-Developer
-Developed & Maintained by Md Salek Miah
-B.Sc. (Honours) in Statistics
-Shahjalal University of Science and Technology (SUST)
-Sylhet, Bangladesh
-
-Contact: saleksta@gmail.com
-<div align="center">SUST Cover Maker · Built to simplify the first page of every assignment.
-
-Independent academic utility for the SUST student community.
 </div>
+
+---
+
+### Three academic-ready designs
+
+<table>
+<tr>
+<td align="center" width="33%"><img src="assets/classic-cover.png" alt="Classic Academic sample cover" width="100%"/><br/><b>01 · Classic Academic</b></td>
+<td align="center" width="33%"><img src="assets/modern-cover.png" alt="Modern Minimal sample cover" width="100%"/><br/><b>02 · Modern Minimal</b></td>
+<td align="center" width="33%"><img src="assets/group-cover.png" alt="Group Assignment sample cover" width="100%"/><br/><b>03 · Group Assignment</b></td>
+</tr>
+</table>
+
+> **Design previews:** Illustrated examples of the three layouts implemented in `index.html`; they are not screenshots of actual generated PDFs. Sample names and IDs are fictional.
+
+### What it does
+
+| **Create** | **Preview** | **Export** |
+|:---|:---|:---|
+| Student, course, teacher & group details | Instant, selectable A4 layouts | Client-side PDF & print |
+| Required-field validation | Classic, minimal & group templates | No account or database |
+
+### Quick start
+
+**01** Open `index.html` or your deployed site · **02** Enter assignment details · **03** Choose a template & add the official logo · **04** Download PDF or print.
+
+### Technology
+
+`HTML5` · `CSS3` · `Vanilla JavaScript` · `html2canvas` · `jsPDF` · `Vercel`
+
+**Single-page static application.** No React, Node.js, server, build tools or user accounts. PDF libraries load from CDNs; internet access may be needed. Data is processed locally in the browser, with optional local logo storage.
+
+### The developer
+
+<table><tr><td><b>Md Salek Miah</b><br/>B.Sc. (Honours) in Statistics<br/>Shahjalal University of Science and Technology<br/>Sylhet, Bangladesh<br/><br/>Research interests: <b>Biostatistics · Epidemiology · Population Health · Data Science</b><br/><br/><a href="https://github.com/muhammadsalek">GitHub</a> · <a href="mailto:saleksta@gmail.com">Email</a></td></tr></table>
+
+<sub>Independently developed student utility; not an official SUST service. University logo should be used with appropriate permission. Always review exported PDFs before academic submission.</sub>
+
+<div align="center"><br/><b>Made for simpler academic workflows · © Md Salek Miah</b></div>
