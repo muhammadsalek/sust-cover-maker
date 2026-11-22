@@ -1,5 +1,9 @@
 <div align="center">
 
+### 🌐 [**sust-cover-maker.vercel.app**](https://sust-cover-maker.vercel.app/)
+
+[![Live Website](https://img.shields.io/badge/OPEN_LIVE_WEBSITE-087F73?style=for-the-badge&logo=vercel&logoColor=white)](https://sust-cover-maker.vercel.app/)
+
 <img src="assets/project-banner.png" alt="SUST Cover Maker project banner — developed by Md Salek Miah" width="100%" />
 
 <br />
@@ -15,7 +19,7 @@
 
 **A modern, browser-based assignment cover generator for Shahjalal University of Science and Technology (SUST).**
 
-[**Explore the source**](https://github.com/muhammadsalek/sust-cover-maker) · [**Contact the developer**](mailto:saleksta@gmail.com)
+[**Explore the source**](https://github.com/muhammadsalek/sust-cover-maker) · [**WhatsApp**](https://wa.me/8801687831074) · [**Email**](mailto:saleksta@gmail.com)
 
 </div>
 
@@ -52,7 +56,7 @@
 
 ### The developer
 
-<table><tr><td><b>Md Salek Miah</b><br/>B.Sc. (Honours) in Statistics<br/>Shahjalal University of Science and Technology<br/>Sylhet, Bangladesh<br/><br/>Research interests: <b>Biostatistics · Epidemiology · Population Health · Data Science</b><br/><br/><a href="https://github.com/muhammadsalek">GitHub</a> · <a href="mailto:saleksta@gmail.com">Email</a></td></tr></table>
+<table><tr><td><b>Md Salek Miah</b><br/>B.Sc. (Honours) in Statistics<br/>Shahjalal University of Science and Technology<br/>Sylhet, Bangladesh<br/><br/>Research interests: <b>Biostatistics · Epidemiology · Population Health · Data Science</b><br/><br/><a href="https://github.com/muhammadsalek">GitHub</a> · <a href="mailto:saleksta@gmail.com">Email</a> · <a href="https://wa.me/8801687831074">WhatsApp: +8801687831074</a></td></tr></table>
 
 <sub>Independently developed student utility; not an official SUST service. University logo should be used with appropriate permission. Always review exported PDFs before academic submission.</sub>
 
