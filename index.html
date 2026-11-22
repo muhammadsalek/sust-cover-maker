@@ -101,13 +101,14 @@ details.help li{margin-bottom:3px}
 .preview-note{font-size:12px;color:var(--muted);margin:8px 2px 0}
 
 /* ---------- Group member rows ---------- */
-.mem-head,.mem-row{display:grid;grid-template-columns:22px minmax(0,1fr) minmax(0,140px) 30px;gap:6px;align-items:center}
-.mem-head{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:4px}
-.mem-row{margin-bottom:6px}
-.mem-row .mn{font-size:12px;color:var(--muted);text-align:center}
-.mem-del{appearance:none;border:1px solid var(--border);background:#fff;color:var(--muted);border-radius:4px;width:30px;height:34px;font-size:18px;line-height:1;cursor:pointer}
+.mem-row{display:grid;grid-template-columns:22px minmax(0,1fr) 30px;gap:8px;align-items:start;margin-bottom:8px;padding:8px 8px 8px 6px;border:1px solid var(--border);border-radius:5px;background:#fafdfc}
+.mem-fields{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:8px;min-width:0}
+.mem-fields .mf{display:flex;flex-direction:column;min-width:0}
+.mem-fields .ml{font-size:11px;font-weight:600;color:var(--green);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mem-row .mn{font-size:12px;color:var(--muted);text-align:center;padding-top:22px}
+.mem-del{appearance:none;border:1px solid var(--border);background:#fff;color:var(--muted);border-radius:4px;width:30px;height:36px;margin-top:18px;font-size:18px;line-height:1;cursor:pointer}
 .mem-del:hover{border-color:var(--danger);color:var(--danger)}
-@media (max-width:480px){.mem-head,.mem-row{grid-template-columns:20px minmax(0,1fr) minmax(0,110px) 30px}}
+@media (max-width:480px){.mem-fields{grid-template-columns:1fr}.mem-row .mn{padding-top:22px}}
 
 /* ---------- Footer ---------- */
 .site-footer{background:var(--green);color:#cfe9e5;margin-top:10px;border-top:3px solid var(--firoza)}
@@ -570,7 +571,6 @@ function safeDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
 function memberFieldHTML(f){
   return '<div class="field span2" data-field="members">'+
     '<label><span>'+esc(f.label)+'</span><span class="opt">Optional</span></label>'+
-    '<div class="mem-head"><span>#</span><span>Name</span><span>Student ID</span><span></span></div>'+
     '<div id="memRows"></div>'+
     '<button type="button" class="btn btn-secondary btn-sm" id="memAdd" style="align-self:flex-start;margin-top:8px">+ Add member</button>'+
     '<textarea id="members" hidden></textarea>'+
@@ -579,8 +579,10 @@ function memberFieldHTML(f){
 }
 function memRowHTML(i, m){
   return '<div class="mem-row"><span class="mn">'+(i+1)+'</span>'+
-    '<input type="text" class="mem-name" placeholder="Full name" value="'+esc(m.name)+'" aria-label="Member name">'+
-    '<input type="text" class="mem-id" placeholder="Student ID" value="'+esc(m.id)+'" aria-label="Member student ID">'+
+    '<div class="mem-fields">'+
+      '<div class="mf"><span class="ml">Name</span><input type="text" class="mem-name" placeholder="Full name" value="'+esc(m.name)+'" aria-label="Member name"></div>'+
+      '<div class="mf"><span class="ml">Student ID / Reg. No.</span><input type="text" class="mem-id" placeholder="Type ID" value="'+esc(m.id)+'" aria-label="Member student ID"></div>'+
+    '</div>'+
     '<button type="button" class="mem-del" aria-label="Remove member" title="Remove">&times;</button></div>';
 }
 function renderMemberRows(list){
