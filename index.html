@@ -100,6 +100,17 @@ details.help li{margin-bottom:3px}
 .mount{transform-origin:top left;width:793px;height:1122px;box-shadow:0 4px 18px rgba(23,63,53,.18)}
 .preview-note{font-size:12px;color:var(--muted);margin:8px 2px 0}
 
+/* ---------- Department combo ---------- */
+.combo{position:relative}
+.combo input{padding-right:38px}
+.combo-btn{position:absolute;right:1px;top:1px;bottom:1px;width:36px;border:0;background:transparent;color:var(--teal);cursor:pointer;font-size:14px;border-radius:0 4px 4px 0}
+.combo-btn:hover{background:#eefaf8}
+.combo-panel{position:absolute;left:0;right:0;top:calc(100% + 2px);z-index:50;background:#fff;border:1px solid var(--border);border-radius:4px;box-shadow:0 8px 24px rgba(23,63,53,.18);max-height:230px;overflow:auto}
+.combo-item{padding:8px 11px;font-size:13.5px;cursor:pointer;border-bottom:1px solid #f0f5f4}
+.combo-item:last-child{border-bottom:0}
+.combo-item:hover{background:#eefaf8;color:var(--teal)}
+.combo-empty{padding:10px 11px;font-size:12.5px;color:var(--muted)}
+
 /* ---------- Group member rows ---------- */
 .mem-row{display:grid;grid-template-columns:22px minmax(0,1fr) 30px;gap:8px;align-items:start;margin-bottom:8px;padding:8px 8px 8px 6px;border:1px solid var(--border);border-radius:5px;background:#fafdfc}
 .mem-fields{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:8px;min-width:0}
@@ -522,7 +533,7 @@ var SECTIONS = [
     {id:"teacherDept", label:"Department", ph:"Defaults to your department if left blank", opt:1, list:"dl-dept", span:2},
     {id:"faculty", label:"Faculty", ph:"e.g. Faculty / School name", opt:1, span:2},
     {id:"supervisor2", label:"Additional Supervisor", ph:"e.g. Associate Professor Dr. Full Name", opt:1, span:2, hint:"Shown only in the Group Assignment template. Leave empty for a single supervisor."},
-    {id:"supervisor2Dept", label:"Additional Supervisor's Department", ph:"Defaults to the teacher's department", opt:1, list:"dl-dept", span:2}
+    {id:"supervisor2Dept", label:"Additional Supervisor's Department", ph:"Pick from the list or type manually", opt:1, list:"dl-dept", span:2, hint:"Pick one of the 28 SUST departments with the arrow, or type any name yourself. Empty = same as the teacher's department."}
   ]},
   {title:"Additional Information", fields:[
     {id:"groupNo", label:"Group Number", ph:"e.g. 05", opt:1, span:2},
@@ -552,6 +563,7 @@ function applyDefaults(){
   ALL_IDS.forEach(function(id){ $(id).value = DEFAULTS[id] || ""; });
 }
 
+var SUST_DEPTS = ["Computer Science and Engineering", "Electrical and Electronic Engineering", "Civil and Environmental Engineering", "Industrial and Production Engineering", "Chemical Engineering and Polymer Science", "Food Engineering and Tea Technology", "Software Engineering", "Architecture", "Statistics", "Mathematics", "Physics", "Chemistry", "Biochemistry and Molecular Biology", "Genetic Engineering and Biotechnology", "Geography and Environment", "Geology and Petroleum Geology", "Oceanography", "Forestry and Environmental Science", "Economics", "Political Studies", "Public Administration", "Sociology", "Social Work", "Anthropology", "Business Administration", "English", "Bangla", "Physical Education and Sports Science"];
 var STORE_KEY = "sustCoverMaker.v4";
 var LOGO_KEY = "sustCoverMaker.logo";
 var TPL_KEY = "sustCoverMaker.tpl";
@@ -631,6 +643,45 @@ function buildForm(){
     html += '</div></div>';
   });
   $("formMount").innerHTML = html;
+  ["department","teacherDept","supervisor2Dept"].forEach(makeDeptCombo);
+}
+
+/* ---------- Department dropdown (type freely OR pick from the 28 SUST departments) ---------- */
+function makeDeptCombo(id){
+  var input = $(id);
+  input.removeAttribute("list");
+  input.setAttribute("autocomplete","off");
+  var wrap = document.createElement("div");
+  wrap.className = "combo";
+  input.parentNode.insertBefore(wrap, input);
+  wrap.appendChild(input);
+  var btn = document.createElement("button");
+  btn.type = "button"; btn.className = "combo-btn"; btn.setAttribute("aria-label","Show SUST departments"); btn.innerHTML = "&#9662;";
+  var panel = document.createElement("div");
+  panel.className = "combo-panel"; panel.hidden = true;
+  wrap.appendChild(btn); wrap.appendChild(panel);
+  function fill(filter){
+    var f = (filter||"").toLowerCase();
+    var items = SUST_DEPTS.filter(function(n){ return !f || n.toLowerCase().indexOf(f) > -1; });
+    panel.innerHTML = items.length
+      ? items.map(function(n){ return '<div class="combo-item" role="option">'+esc(n)+'</div>'; }).join("")
+      : '<div class="combo-empty">No match. Your typed text will be used.</div>';
+  }
+  function open(filter){ fill(filter); panel.hidden = false; }
+  function close(){ panel.hidden = true; }
+  btn.addEventListener("click", function(){ if(panel.hidden){ open(""); } else close(); });
+  input.addEventListener("input", function(){ open(input.value); });
+  input.addEventListener("focus", function(){ if(!input.value) open(""); });
+  input.addEventListener("keydown", function(e){ if(e.key==="Escape") close(); });
+  panel.addEventListener("mousedown", function(e){ e.preventDefault(); });
+  panel.addEventListener("click", function(e){
+    var it = e.target.closest ? e.target.closest(".combo-item") : null;
+    if(!it) return;
+    input.value = it.textContent;
+    input.dispatchEvent(new Event("input",{bubbles:true}));
+    close();
+  });
+  document.addEventListener("click", function(e){ if(!wrap.contains(e.target)) close(); });
 }
 
 function getData(){
